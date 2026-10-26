@@ -124,7 +124,7 @@ def audit(event, args):
 sys.addaudithook(audit)
 import aftercare
 import aftercare.cli
-import deepagents
+from langchain.agents import create_agent
 from langgraph.checkpoint.postgres import PostgresSaver
 from aftercare.api.app import create_app
 from aftercare.config import Settings

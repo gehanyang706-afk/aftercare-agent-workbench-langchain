@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     dashscope_api_key: SecretStr = SecretStr("")
     dashscope_base_url: SecretStr = SecretStr("")
     database_url: SecretStr = SecretStr(
-        "postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55432/aftercare_demo"
+        "postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55435/aftercare_demo"
     )
     offline: bool = True
     dev_faults: bool = False

@@ -1,4 +1,4 @@
-name: aftercare-agent-workbench
+name: aftercare-agent-workbench-langchain
 services:
   db:
     image: pgvector/pgvector:pg17@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: aftercare
       POSTGRES_PASSWORD: aftercare_local_only
     ports:
-      - "127.0.0.1:55432:5432"
+      - "127.0.0.1:${AFTERCARE_DB_PORT:-55435}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - pgsocket:/var/run/postgresql
@@ -20,7 +20,7 @@ services:
   app:
     profiles: [app]
     build: .
-    image: aftercare-agent-workbench:local
+    image: aftercare-agent-workbench-langchain:local
     environment:
       APP_ENV: local
       ALLOW_REAL_MODEL_CALLS: "false"
@@ -32,7 +32,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "127.0.0.1:${AFTERCARE_PORT:-8000}:8000"
+      - "127.0.0.1:${AFTERCARE_PORT:-8130}:8000"
     command: ["python", "-m", "aftercare", "serve", "--offline", "--container-network"]
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5)"]
@@ -42,7 +42,7 @@ services:
     restart: "no"
   worker:
     profiles: [app]
-    image: aftercare-agent-workbench:local
+    image: aftercare-agent-workbench-langchain:local
     build: .
     environment:
       APP_ENV: local

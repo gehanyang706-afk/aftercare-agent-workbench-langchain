@@ -1,13 +1,9 @@
-"""Single Deep Agent; HITL checkpoint is separate from committed business receipts."""
+"""Single LangChain Agent; HITL checkpoints are separate from business receipts."""
 
 from contextlib import contextmanager
 
-from deepagents import (
-    GeneralPurposeSubagentProfile,
-    HarnessProfile,
-    create_deep_agent,
-    register_harness_profile,
-)
+from langchain.agents import create_agent
+from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.types import Command
@@ -18,10 +14,6 @@ from aftercare.llm.budget import BudgetLedger
 from aftercare.llm.scripted import ScriptedModel
 from aftercare.repositories.models import Message
 from aftercare.retrieval.engine import PolicySearch
-
-EXCLUDED = frozenset(
-    {"ls", "read_file", "write_file", "edit_file", "glob", "grep", "execute", "task", "write_todos"}
-)
 
 
 def factory(
@@ -38,14 +30,6 @@ def factory(
         ledger=BudgetLedger(service.sessions),
         conversation_id=conversation,
         run_id=run_id or f"{conversation}:{service.snapshot(principal, conversation)['revision']}",
-    )
-    register_harness_profile(
-        getattr(model, "model_name", "aftercare:scripted"),
-        HarnessProfile(
-            general_purpose_subagent=GeneralPurposeSubagentProfile(enabled=False),
-            excluded_tools=EXCLUDED,
-            excluded_middleware=frozenset({"SummarizationMiddleware"}),
-        ),
     )
     search = PolicySearch()
     retrieval_profile = retrieval_profile or (
@@ -72,12 +56,16 @@ def factory(
         search,
         retrieval_profile=retrieval_profile,
     )
-    graph = create_deep_agent(
+    graph = create_agent(
         model=model,
         tools=tools,
-        subagents=[],
-        middleware=[BusinessBoundary(service, principal, conversation, profile)],
-        interrupt_on={"commit_action": {"allowed_decisions": ["approve", "reject"]}},
+        middleware=[
+            BusinessBoundary(service, principal, conversation, profile),
+            HumanInTheLoopMiddleware(
+                interrupt_on={"commit_action": {"allowed_decisions": ["approve", "reject"]}},
+                interrupt_mode="batched",
+            ),
+        ],
         checkpointer=checkpointer,
         name="aftercare-main",
     )

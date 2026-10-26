@@ -1,5 +1,9 @@
 # 电商售后多轮决策与执行 Agent 工作台
 
+> **当前分支：LangChain 轻量迁移版。** 从 `5b435ea` 独立建立，使用 `langchain.agents.create_agent()` + 原生 HITL + LangGraph/PostgreSQL Checkpoint，产品依赖已移除 Deep Agents。保留原九工具、业务规则、可信确认与事务回执；下文旧实验数据均为历史记录，不是本分支性能成绩。
+>
+> 当前运行与验收请先看 [轻量迁移交接](docs/handoffs/langchain-lite-migration.md)。本分支 Compose 使用独立项目/镜像及默认端口 55435、8130；迁移专用测试容器位于 55434。不要照抄历史命令连接 55432 的真实预算库。
+
 > 当前进入收尾候选，停止新增业务功能和提示词迭代。最后固定六题真实验收尚待批准；本轮0真实请求。离线工作台8128已更新，237项测试通过；六题脚本预演两模式各5/6，保留“大一号”替身解析失败。
 >
 > [最后验收与预算](docs/closing/final-acceptance.md) · [启动说明](docs/operations.md) · [演示脚本](docs/closing/demo-script.md) · [结果总表](docs/closing/results-summary.md) · [面试交接](docs/closing/interview-handoff.md) · [事实来源核对](docs/closing/fact-sources.md)
@@ -13,7 +17,8 @@
 ## 运行
 
 ```bash
-cd /Users/gehanyang/编程/aftercare-agent-workbench
+cd /Users/gehanyang/编程/aftercare-agent-workbench-langchain
+export DATABASE_URL=postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55435/aftercare_demo
 docker compose up -d db
 .venv/bin/python -m aftercare db migrate
 .venv/bin/python -m aftercare demo seed --database demo
@@ -22,7 +27,7 @@ docker compose up -d db
 .venv/bin/python -m aftercare worker --provider scripted
 ```
 
-打开 http://127.0.0.1:8000。当前已启动的容器工作台在 http://127.0.0.1:8128。
+本地源码服务默认 http://127.0.0.1:8000；本分支 Compose app 使用 http://127.0.0.1:8130。原工作台8128属于旧版本。
 可体验“S1002 换大一码”、确认前改口、刷新/重连。取消只记录模拟退款请求，退换仅提交申请，不声称到账或寄出。
 
 [操作说明](docs/operations.md)提供 Docker、重置、故障演示、依赖重建与验证命令。

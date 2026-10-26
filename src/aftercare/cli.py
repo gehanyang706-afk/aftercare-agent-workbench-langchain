@@ -177,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
         health = database_health(settings)
         dependencies = {
             name: importlib.metadata.version(name)
-            for name in ("deepagents", "langgraph", "psycopg", "fastapi", "alembic")
+            for name in ("langchain", "langgraph", "psycopg", "fastapi", "alembic")
         }
         print(
             json.dumps(

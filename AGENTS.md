@@ -1,5 +1,13 @@
 # 售后 Agent 工作台执行约束
 
+## 当前分支优先说明：LangChain 轻量迁移
+
+用户于2026-10-26指定从5b435ead0c3b9f998c89d9d31f510ec29ad77884独立重建，当前为refactor/langchain-lite。此段替代下面历史阶段的默认框架/环境/旧计划入口说明；历史成绩不回写。
+产品创建入口为LangChain create_agent + HumanInTheLoopMiddleware(batched)，底层LangGraph/PostgresSaver。BusinessBoundary、九工具、Prompt、业务服务、可信确认、事务与回执沿用基线，不迁移D1/CE/S1/S2/S3优化，不使用fixed-workflow替代默认Agent。
+本轮仅完成框架兼容与离线验收，不调用云端/Ollama/模型用户/裁判，不运行holdout/Test，不执行历史待批计划。后续同模型性能对照须独立冻结与批准；基础验收后停止。
+测试显式使用127.0.0.1:55434/aftercare_test（新独立测试容器），真实55432和旧实验55433不得用来清库验收。Compose使用新项目/镜像及默认55435/8130，避免影响旧容器与数据卷。
+当前交接docs/handoffs/langchain-lite-migration.md；迁移前私有备份位于同级aftercare-migration-backups/20261026-langchain-lite，禁止推送备份/runtime/密钥/账本。原实验树的未提交修改原样保留，不reset/stash/混合提交。
+
 目标：本机单商户模拟订单的多轮查询、取消、退货、换货、转人工；不连接真实支付/物流。
 技术栈：Python3.13、FastAPI、PostgreSQL/pgvector、Deep Agents/LangGraph、原生HTML/CSS/JS。
 设计见docs/design四份文档、docs/business-contract.md、docs/architecture.md、docs/decisions.md。

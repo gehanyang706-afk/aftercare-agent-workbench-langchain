@@ -12,7 +12,7 @@ from aftercare.repositories.models import Base
 from aftercare.services.business import BusinessService
 from aftercare.services.demo import seed
 
-TEST_URL = "postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55432/aftercare_test"
+TEST_URL = "postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55434/aftercare_test"
 FIXED = datetime(2026, 10, 17, 4, 0, tzinfo=UTC)
 
 
