@@ -11,7 +11,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 
-from aftercare.domain.contracts import utc_now
+from aftercare.domain.contracts import BusinessError, utc_now
 from aftercare.repositories.models import (
     Conversation,
     Customer,
@@ -19,10 +19,10 @@ from aftercare.repositories.models import (
     Event,
     Inventory,
     Job,
-    Operation,
-    Preview,
 )
 from aftercare.services.business import columns, digest
+from aftercare.services.event_reads import BATCH_SIZE, MAX_EVENT_ID, EventReader
+from aftercare.services.read_snapshot import ReadSnapshotService
 from aftercare.workers.queue import enqueue
 
 router = APIRouter()
@@ -65,6 +65,8 @@ def identity(request: Request):
     token = request.cookies.get(COOKIE)
     if not token:
         raise HTTPException(401, "DEMO_SESSION_REQUIRED")
+    if not request.app.state.settings.demo_login_enabled:
+        raise HTTPException(401, "DEMO_LOGIN_DISABLED")
     service = request.app.state.business
     with service.sessions() as s:
         session = s.get(DemoSession, digest(token))
@@ -84,6 +86,8 @@ AUTH = Depends(identity)
 
 @router.post("/api/demo-sessions")
 def demo_session(body: SessionBody, request: Request, response: Response):
+    if not request.app.state.settings.demo_login_enabled:
+        raise HTTPException(404, "NOT_FOUND")
     origin_check(request)
     if "application/json" not in request.headers.get("content-type", ""):
         raise HTTPException(415, "JSON_REQUIRED")
@@ -102,13 +106,31 @@ def demo_session(body: SessionBody, request: Request, response: Response):
                 expires_at=utc_now() + timedelta(hours=24),
             )
         )
-    response.set_cookie(COOKIE, token, httponly=True, samesite="strict", max_age=86400)
+    response.delete_cookie("aftercare_staff_session")
+    response.set_cookie(
+        COOKIE,
+        token,
+        httponly=True,
+        samesite="strict",
+        max_age=86400,
+        secure=request.url.scheme == "https",
+    )
     return {"principal": body.customer_id, "csrf_token": csrf}
 
 
 @router.get("/api/session")
 def session_info(who=AUTH):
     return who
+
+
+@router.delete("/api/session")
+def logout_customer(request: Request, response: Response, who=AUTH):
+    with request.app.state.business.sessions.begin() as s:
+        row = s.get(DemoSession, digest(request.cookies[COOKIE]), with_for_update=True)
+        if row is not None:
+            s.delete(row)
+    response.delete_cookie(COOKIE)
+    return {"ok": True}
 
 
 @router.get("/api/orders")
@@ -142,20 +164,7 @@ def create_conversation(request: Request, who=AUTH):
 @router.get("/api/conversations/{conversation_id}")
 def snapshot(conversation_id: str, request: Request, who=AUTH):
     service = request.app.state.business
-    result = service.snapshot(who["principal"], conversation_id)
-    with service.sessions() as s:
-        result["jobs"] = [
-            columns(j) for j in s.scalars(select(Job).where(Job.conversation_id == conversation_id))
-        ]
-        result["operations"] = [
-            op.receipt
-            for op in s.scalars(
-                select(Operation)
-                .join(Preview, Operation.preview_id == Preview.id)
-                .where(Preview.conversation_id == conversation_id)
-            )
-        ]
-    return result
+    return ReadSnapshotService(service).get(who["principal"], conversation_id)
 
 
 @router.post("/api/conversations/{conversation_id}/messages", status_code=202)
@@ -243,28 +252,58 @@ async def events(
     who=AUTH,
 ):
     service = request.app.state.business
-    service.snapshot(who["principal"], conversation_id)
     try:
-        cursor = max(after, int(request.headers.get("last-event-id", "0")))
+        cursor = max(0, after, int(request.headers.get("last-event-id", "0")))
+        if cursor > MAX_EVENT_ID:
+            raise ValueError("EVENT_CURSOR_OUT_OF_RANGE")
     except ValueError:
         raise HTTPException(400, "INVALID_EVENT_CURSOR") from None
+    reader = EventReader(service.sessions)
+    session_hash = digest(request.cookies.get(COOKIE, ""))
+    # Fetch before headers so initial authorization errors retain normal HTTP status.
+    # The short transaction finishes before StreamingResponse begins sending rows.
+    initial = await asyncio.to_thread(
+        reader.read_batch, who["principal"], conversation_id, cursor, session_hash
+    )
 
     async def stream():
         nonlocal cursor
+        rows, delay = initial, 0.5
         while True:
             if await request.is_disconnected():
-                break
-            rows = await asyncio.to_thread(
-                load_events, service, who["principal"], conversation_id, cursor
-            )
+                return
+            if rows:
+                delay = 0.5
             for event in rows:
+                if await request.is_disconnected():
+                    return
                 cursor = event["id"]
                 data = json.dumps(event, ensure_ascii=False)
                 yield f"id: {cursor}\nevent: trace\ndata: {data}\n\n"
-            if once:
-                break
-            yield ": heartbeat\n\n"
-            await asyncio.sleep(0.5)
+            if once or await request.is_disconnected():
+                return
+            if len(rows) == BATCH_SIZE:
+                # Bounded batches can catch up without an artificial half-second per batch.
+                await asyncio.sleep(0)
+            else:
+                yield ": heartbeat\n\n"
+                await asyncio.sleep(delay)
+                if not rows:
+                    delay = min(2.0, delay * 2)
+            if await request.is_disconnected():
+                return
+            try:
+                rows = await asyncio.to_thread(
+                    reader.read_batch, who["principal"], conversation_id, cursor, session_hash
+                )
+            except BusinessError as error:
+                if error.code not in {"SESSION_EXPIRED", "NOT_FOUND"}:
+                    raise
+                if not await request.is_disconnected():
+                    data = json.dumps({"error_code": error.code}, ensure_ascii=False)
+                    # No id: revocation must not move the replay cursor.
+                    yield f"event: stream_closed\ndata: {data}\n\n"
+                return
 
     return StreamingResponse(
         stream(),

@@ -24,6 +24,9 @@ services:
     environment:
       APP_ENV: local
       ALLOW_REAL_MODEL_CALLS: "false"
+      # Explicit local demonstration switches; staff credentials are provisioned via CLI.
+      DEMO_LOGIN_ENABLED: "${DEMO_LOGIN_ENABLED:-false}"
+      WAREHOUSE_SIMULATION_ENABLED: "${WAREHOUSE_SIMULATION_ENABLED:-false}"
       # Same-host Unix socket keeps the strict offline network guard intact.
       DATABASE_URL: "postgresql+psycopg://aftercare:aftercare_local_only@/aftercare_demo?host=/var/run/postgresql"
     volumes:

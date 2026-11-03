@@ -12,6 +12,8 @@ from aftercare.domain.rules import require
 from aftercare.repositories.models import (
     Application,
     Customer,
+    ExchangeFulfillment,
+    FulfillmentAudit,
     Inventory,
     Order,
     OrderLine,
@@ -160,6 +162,33 @@ def settle_application(sessions, application_id, decision):
             stock.version += 1
             reservation.status = "CONSUMED" if decision == "COMPLETED" else "RELEASED"
         app.status = decision
+        if app.action == "exchange":
+            # Legacy test/demo shortcut, never a formal fulfillment command or Agent tool.
+            # Keep its bypass explicit in audit and do not fabricate warehouse evidence.
+            from aftercare.services.business import new_id
+
+            fulfillment = s.get(ExchangeFulfillment, app.id, with_for_update=True)
+            require(fulfillment is not None, "INVENTORY_INVARIANT")
+            prior_version = app.version
+            app.version += 1
+            fulfillment.updated_at = utc_now()
+            s.add(
+                FulfillmentAudit(
+                    id=new_id("audit"),
+                    application_id=app.id,
+                    command_id=None,
+                    actor_id="demo-helper",
+                    actor_role="system",
+                    actor_source="demo_helper",
+                    command="demo_settle",
+                    from_state="EXCHANGE_REQUESTED",
+                    to_state=decision,
+                    from_version=prior_version,
+                    to_version=app.version,
+                    details={"demo_only": True, "bypasses_fulfillment": True},
+                    created_at=utc_now(),
+                )
+            )
         return {"application_id": app.id, "status": app.status}
 
 

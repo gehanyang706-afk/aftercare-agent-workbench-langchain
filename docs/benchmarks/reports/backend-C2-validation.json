@@ -1,0 +1,872 @@
+{
+  "date": "2026-10-28",
+  "stage": "C2",
+  "status": "complete",
+  "parent_stage": "C",
+  "parent_stage_complete_within_documented_local_scope": true,
+  "source_base_commit": "ed501ed012a2f3e986319523e6cc6c2aa73ff7e3",
+  "uncommitted": true,
+  "source_entries": {
+    ".env.example": "6e3df5394e8420083c3f041db7e49aa2ff2249d7d7e53be3bbcafcf033cd8cf1",
+    "compose.yaml": "d5e6ede4c46a470773d6edbcf8a61997f6e74124bbcea9ca2e4bc289253ba7b5",
+    "migrations/env.py": "14e51b18bda5e29cfc5b8f45d9cf0ff08e4ff59b95b6bc1f2918450a2be7febf",
+    "migrations/script.py.mako": "6d5c8099f4a2b06249f18549b4b026726e24cf4d8b27d8172c5fe98a66cc410d",
+    "migrations/sql/0002_business.sql": "92535fe2a6eff197ca63f5ca0412b57143459c138f3c48122b74271d071c5ed6",
+    "migrations/versions/0001_bootstrap.py": "3e746d7019ec378b49262fc9c80d5832095e663cb37e7e54425552adbc456a8b",
+    "migrations/versions/0002_business.py": "e6508da69a56edbf84ca2f577430b114bf0d0f4edd09c0c8f7ab1f035ec4e060",
+    "migrations/versions/0003_retrieval.py": "6e4f5db1d8d391273bee01daf5fe6d07c7822714081e0f8131f240a0e4d33e0f",
+    "migrations/versions/0004_budget.py": "3783e4528b4217cec5602aa4ce987bb09f32a61d0da6fefd2d5a2d92350a66ba",
+    "migrations/versions/0005_web_jobs.py": "08bf4731f16caf68b1c6f98f190a217b91c5279fb39b976f873ec69191efe92a",
+    "migrations/versions/0006_experiments.py": "ffe1d33e31986ce0f6a4b8332ae57adf187c963846569f78cd081f9679b4c61e",
+    "migrations/versions/0007_exchange_fulfillment.py": "98400288a47e3c22870543012d669a9268355a24b3c243fb1ef5357b78775a8b",
+    "migrations/versions/0008_staff_auth.py": "91e3aaf28f3cfb7087b6bb57db551c58a7a89684f5ad1712a88570c2965899ba",
+    "migrations/versions/0009_warehouse_outbox.py": "091159a15408b4800b10f8db8db7f830aeef004ff5cd37df64c61d919c909e01",
+    "migrations/versions/0010_warehouse_recovery.py": "609050209d1f92c758c94cde5a20738ceb5b3d1eadf61a18b759abaf49c212cc",
+    "pyproject.toml": "474aad33fe283f3d7064482ad87fdbbe6597c4fc5b73ae93aaeba78533dfec13",
+    "requirements.lock": "44388bf7ef0c789719a917fd2a862c30f8fbaeca40458582f88f8701c0c9aa65",
+    "scripts/backend_b2_http_smoke.py": "e9c9890d6cb460104e9d9b4da514b37d5f3703907c50ae8753dc55d1c0d2454d",
+    "scripts/backend_baseline.py": "f1dc6f82ca128e019f13d38e549b0fe243cdb5ccae79d15ab903187b0ad4e09b",
+    "scripts/backend_c1_http_smoke.py": "559f52991e37aec170157d07544688d7bd1c3de0defd44d4a89e8a398c288cb9",
+    "scripts/backend_c2_http_smoke.py": "ccc8e4c5c111490fafa8631d204d6611b6d78cb3f597061c4f433995f1c967ee",
+    "scripts/backend_c2_recover_c1.py": "b2a849a42d76c914639fb7dc225be6b00e0c95ce369892c7bb2d403998a5b378",
+    "scripts/migration/web_smoke.py": "6b85e422fddb096bdef4308646b200c0cae3c33d442a961e03c459691895ba62",
+    "src/aftercare/__init__.py": "43ea8dd33bc2229a7fa0ef6bb107bc8ae8fc43017978c81b193ff28ab86634f0",
+    "src/aftercare/__main__.py": "637fedd2da2754864b8c09838df534491c37b2014b3ac43bd5ec725dc3d3c7d7",
+    "src/aftercare/agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/agent/context.py": "f7d4f29edd45081c14d4bcdaa3cc859567c3cfc6c9ddc2a9c72327f986f4fb22",
+    "src/aftercare/agent/continuation.py": "433b327b45d1c4de503da7d1162ecc680bf2d57bf85b5689430b488d70d90d9f",
+    "src/aftercare/agent/demo.py": "93c63c3fd7d81aabf994da58df8565f04c6c1f77129bb450ef385237d47ae0cd",
+    "src/aftercare/agent/instructions.py": "3f41e2789bf9e2730ba74554a6c773a20d37643a9d1b819e9663c7b2675c577c",
+    "src/aftercare/agent/middleware.py": "9fba0e9d3302d649f977d1219e33ed70d370079531b4ff656e0d253826cae001",
+    "src/aftercare/agent/presentation.py": "6ff65ec11b0e39a01b14f17aa90e83117faaded11f345e5d8794592d559db074",
+    "src/aftercare/agent/runtime.py": "a9435f3db92e050a48b5529876b837f5df63c15cf3f4346b353d950f5184e6d2",
+    "src/aftercare/agent/tools.py": "1d6ae7993a955b02a4a10c9b6ac0b288f482ce87d83d15b52b84c185bc23768c",
+    "src/aftercare/agent/workflow.py": "4446267c5b8bce9a51d5186eec189c0c742ec565c8902790ea4f5897dc7b3423",
+    "src/aftercare/api/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/api/app.py": "ae570fb8cd34e761ce842f1c1b1e0ceb88bc639392ca6d3c59d3da9333b7dcf2",
+    "src/aftercare/api/fulfillment.py": "d3637fa9dadd85f443a0fa2c52e5c8feb647c6d632a5e27c86388c14c4fb8593",
+    "src/aftercare/api/routes.py": "157889eb5c41ffee8cb2d178f87a0edb46d3544c4451c32689fd6d84b008d25c",
+    "src/aftercare/api/warehouse.py": "c0c009e7614b5704840ba37e1027524f9b3f397c1507e478237f6e8239826641",
+    "src/aftercare/cli.py": "7da971b567490465bc00fd4aedfdd2fc1439754203a62cd79a2ed1bd396e53e2",
+    "src/aftercare/config.py": "1029ee6ad71395da1c90f328f9021204bb7be5895f8525c58cb498cc5c1536cb",
+    "src/aftercare/domain/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/domain/contracts.py": "b6cf44e96ae6dc65b1d23732916ea8362c41d1a2f910dab5caf37187b16fad22",
+    "src/aftercare/domain/fulfillment.py": "03ff5808c16f185285a23fca8d624940c334bcfbf5e82ccd70cc011f612039ed",
+    "src/aftercare/domain/rules.py": "a1af1594aa28ac69e936cbe3a9e2f174212c7a94171c7100255961a14c4048d7",
+    "src/aftercare/domain/warehouse.py": "9d68b2b69a2f2489867c1b4c8b9b6c29c2583375c1f4271273b956ee5297df13",
+    "src/aftercare/harness/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/harness/context_policy.py": "08f638d13dd8d3e0ef1ba4ea7712643c9957a4481187583152a231be333b6ed0",
+    "src/aftercare/harness/contracts.py": "8e0b0c8e236d1a112cc3330a3169060bc01724992e0a481125dab23d5054ad2d",
+    "src/aftercare/harness/message_blocks.py": "35418bb561175475a93d98741a0eaaf09b6f83157360fe72d036f409a9d538f4",
+    "src/aftercare/llm/__init__.py": "6d59fb037e0e6ef35af09b06c179c9a761c6605f884237471717ecfb598d92a4",
+    "src/aftercare/llm/budget.py": "c6925752b4c6e5b6303ecf11402fe2332c82ddf201a17e0f21ae86d661fb8653",
+    "src/aftercare/llm/experiment_gateway.py": "f92c679346fd430ef0237d5705c870eb2bb382eb3bb5b309b9e363c5becd08f3",
+    "src/aftercare/llm/experiment_scope.py": "19b596b80468fdb08b2e02cf0fc0354421cb8c31c998fe67a0cced568b1fea8d",
+    "src/aftercare/llm/gateway.py": "5765f814ff6f5d30507ef7273909530ee878d03d1dd6b9f91e4032c1abcdfc62",
+    "src/aftercare/llm/pilot_gateway.py": "2ee1c04e74248c493d8acece6a135e1718bbbe4c622d5abd1646f658544e3aac",
+    "src/aftercare/llm/provider.py": "288e8508a46afeb95230b50bd5cbedb6eecfd39647e29b707fc2bf6e00315f06",
+    "src/aftercare/llm/real.py": "356e04858a2bc622982927067c80279b5ed980c33063b6532ca9cb21d7b60040",
+    "src/aftercare/llm/regression_scope.py": "995f0a39e0795e88784616ead03abad7d2331710606e1b5197796ba1809a0552",
+    "src/aftercare/llm/scripted.py": "85da792729371904ecc937275a22a225f4fbd22e527c9563a9e66862c3c6a71b",
+    "src/aftercare/llm/smoke.py": "55f56ce0387a5dba77cb707965886173f6a0f33d8424c9e32630a7b2badd5320",
+    "src/aftercare/llm/supervisor.py": "e52e0639cb5a42f44901400661d63f81a41211f1396e0d9a7b8775c945c77f15",
+    "src/aftercare/mock_warehouse/__init__.py": "92fc424485a93db190524f900c7a68d0b82e96a1a260474d26a2486dc7b5811f",
+    "src/aftercare/mock_warehouse/app.py": "8c8a35642cba83f452363e7ef253329ea216136baf574a490ad93ffbe294adc8",
+    "src/aftercare/mock_warehouse/callbacks.py": "c42be05fc02f7d9a297b87c117c373d8d60fb2b5627bfdc9a98ca0f97b0935ba",
+    "src/aftercare/mock_warehouse/store.py": "3f96e8ed9eb96be900ca10b5378c58548be2d79fb66c99d44c46d2beac74a24c",
+    "src/aftercare/offline.py": "d58294f9dd3c534a224374755b26ed9ec6b377a2bbcd9d71272383ca8aefa9e0",
+    "src/aftercare/repositories/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/repositories/database.py": "ab98bedb495ea54d9bcb64c189787b590a7c0a7be5e37c789e7b0a778a3511f8",
+    "src/aftercare/repositories/models.py": "88c445a163fa2e100bc641aadfb0f229a5e5fa36b22d2cf7d53ed79ead231cd9",
+    "src/aftercare/retrieval/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/retrieval/engine.py": "bf12761ab78febca257d0b9f974a4a9b7676e32ae02a209941171c386f58e713",
+    "src/aftercare/retrieval/evaluate.py": "3354883d86ccb0fc6cf91f9a03e06ea8e69dae3b4575c436855d6d0089486492",
+    "src/aftercare/retrieval/local.py": "b45ce7ca2cb6a214f3fd8c13a30b2e45caa6666bb62a658d5434fbfafa383efd",
+    "src/aftercare/services/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/services/business.py": "92168360f1faa56d9e700566046ede66aeb4592bdcc656c9b6fb139486b1a348",
+    "src/aftercare/services/case_state.py": "c84ada2b8f6251dd468dea3b7285da681e8798a7aeb92e4c43e8a6b136a26537",
+    "src/aftercare/services/confirmation.py": "5feaa150afec8e1e26c0dc4ef9c749be8a85e88ccf175e398507fc20ae794e40",
+    "src/aftercare/services/demo.py": "53026daa6a41b9e73e5e41739333f9575b7aa3b68daec6acbc36535bb15e9528",
+    "src/aftercare/services/fulfillment.py": "f3924d1b4b713cf399dc7dfd58fa8e1837799297c61a30ab841efe5932d7d829",
+    "src/aftercare/services/intent_guard.py": "4205c18ffe6795348640a93f4e8939f25548799d82a0bcb59b7558c04839c39f",
+    "src/aftercare/services/outbox.py": "cd9eb702090d7bc8f205e4126169eb0e7ed0204505e2758d8d04dcbbbd431e08",
+    "src/aftercare/services/process_audit.py": "0042543b2b64c6788bffea135319d1590bd338d273577723993aded09a6f4523",
+    "src/aftercare/services/quantity_audit.py": "c569e2431254ab193d1656aa2f00d03b9244524536cced9785b2607d7c57aa1f",
+    "src/aftercare/services/quantity_evidence.py": "1e2533eb3e94f43425385efab3ba2ec14481e8e8b8d71430c0bc5270b3108d0c",
+    "src/aftercare/services/recovery.py": "add1ce2f390b737f55596867ae24290ed1293a8650914586911e64203281c3ba",
+    "src/aftercare/services/simulated_warehouse.py": "a77ea3ddf7178f4aab635fcbca09403437b5ab5f3c38a027c02c377c22780713",
+    "src/aftercare/services/staff_auth.py": "bc2a9478b43d6106845252b08de75b82147fbf4baea3aa5a7c73ddab1112f3fc",
+    "src/aftercare/services/user_pause.py": "5493b3c38ce7998b795390ed24b12fb6b0634baee5bf0fdf8fd4b02bbbea2b16",
+    "src/aftercare/services/warehouse_attempt.py": "c1c587dbcc36f6d19a26372fbc7b5cc8b63df05c47463dcb885effcc418cec1f",
+    "src/aftercare/services/warehouse_http.py": "49cebc14dda6203dd964a2e3d8ec7a60c09c8ae36478cca8409f39aa649058fd",
+    "src/aftercare/web/static/app.css": "89f87556c237072e784f01182957e61d91d4f61921bcf66b36fb71b9c3421f2e",
+    "src/aftercare/web/static/app.js": "3351921a60c533f7e0bd1b41f7d2748fa0fd61e5c2a65696e8cc4582d31aee1f",
+    "src/aftercare/web/static/fulfillment.css": "e587f419466f5a931c0014a718cd46e603166b972937a4be341cced6cea546c5",
+    "src/aftercare/web/static/fulfillment.js": "9aa625798cb6406ade71374d2813632c2f47d24332485af7c0d4b44242baccc7",
+    "src/aftercare/web/templates/fulfillment.html": "190bdfc4c24b65c5f79499f4e6be92fbc079938bdf323fc037581b3bbe587df3",
+    "src/aftercare/web/templates/index.html": "61c9e3449a73aa5bb2f60d8dfcca02a5d52a963242dcb46beaf3e1a549023644",
+    "src/aftercare/workers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/workers/outbox_worker.py": "643144f8fa1cbdca00f66af37f26ad73bb892203aa7091f3917cc03e78331f69",
+    "src/aftercare/workers/queue.py": "168b739cb8461c4c6b815432a1b58fecb3ce7e0956fd627e86a713bc864e974f",
+    "src/aftercare/workers/reconciliation_worker.py": "05cf2c90d244cbad5ac0c51d1a94b70aa55f4cb3df55677360ed098bc751969b",
+    "src/aftercare/workers/worker.py": "04c68828f56b9e084732ab9de84c358fcbd4b636c7df209f42e97e704d52d9b0",
+    "tests/agent_contract/test_agent.py": "b040d202ed00422b70d3164a2b66786e0f13d4e47711eefef8ae5039c85f9e6d",
+    "tests/agent_contract/test_confirmation_continuation.py": "ffd7cefdaab52e9d5297a7f8e50d7c03ed4fc1e5f608d5a07a75359af0b61a46",
+    "tests/agent_contract/test_fact_provenance.py": "d7560990df823d71a993640373bfe04d40a2f4ee79de259dba43c0bc4ce7dd57",
+    "tests/agent_contract/test_intent_boundary.py": "9d4f07684a1d9de1ff1de17a729355674d69d6642cce7a9e7a0bffafbf8a1981",
+    "tests/agent_contract/test_langchain_migration.py": "cc22fcb6e41177d94d1a48fd56a729cecc8c4d4c2f9ba6b28af8f5a5553c57df",
+    "tests/agent_contract/test_post_commit_budget_stop.py": "cdef2b8f13424c8e285832d9b3387d1ed6660c6e37ded434a9b545b0dc77b6a9",
+    "tests/agent_contract/test_provider.py": "64cea59aac31465c84aca1074230805ee061542aa307dc113bb488315056ca94",
+    "tests/agent_contract/test_quantity_chinese.py": "79c20078d1f9e1edb38babd515a77c645c0d03b0f0dc4374a75e9161e0395fe2",
+    "tests/agent_contract/test_real_agent.py": "3ef4b01d3ce4eef6d116524b19ea480a35465f5ec3b5814e921077b44713038f",
+    "tests/agent_contract/test_redundant_clarification.py": "68da140aa3c6a62c3faa11c3c9b437f44f32f6fc6cfefa317fec3eb7f2d40191",
+    "tests/agent_contract/test_shared_context_profile.py": "6eab6e6c8786c3fd7b974a4b8e18889fa213db04d9dbb1762b197a12946ce281",
+    "tests/agent_contract/test_smoke.py": "147bc386124b2d00f4302b2305ffd3ca68e6efcf6fd2b946546eec8e92f63741",
+    "tests/agent_contract/test_user_pause.py": "cb09eff0d7d9c33d0717114491afe294c10e2690ec47c8ed371cd9d79657f0d3",
+    "tests/benchmark_contract/test_bridge.py": "4b2c227817640e3812b7a2bccde821a2ca4d91053486168a83cb03d6b169b7d5",
+    "tests/benchmark_contract/test_context_metrics.py": "6a2cf11919e14097602fb8961309a8337d352aae1147ef26d09508276b659416",
+    "tests/benchmark_contract/test_experiment_ledger.py": "f3e8a45bfd09a4b29d16a10701224d19639d06d5fca5a729dcda3d9768b6b8f7",
+    "tests/benchmark_contract/test_official_protocol.py": "190877328baaa7622c59500df4161a8bd3cf6fb726fd920197a2cf89bfd9a074",
+    "tests/benchmark_contract/test_preflight.py": "6a40305a8aaa355d5c7418cd2dc78538c050856781eedd63cbacfb49802ed006",
+    "tests/benchmark_contract/test_tool_visibility.py": "6ca8b76e1f6159318ef86c3694af5471906d00feb5b3341884efa50d3d0473c6",
+    "tests/benchmark_contract/test_visibility_integration.py": "49059701db59347ab13e3e96952985570fc35e5ae65f80392a705494f836c6df",
+    "tests/benchmark_contract/test_visible_replay.py": "96e4bc991e3a839fc93e08007864cec48b9fb4cf9528ce813728115937385c16",
+    "tests/conftest.py": "4e74d3d2c6856e49e2dd5bd217bc776465fd03aeb979c0748b07575f595081d3",
+    "tests/e2e/test_fulfillment_api.py": "e440ba369f7fdb37ac5328307980bfeb45b26c44e88ecd40b81cea73426bf484",
+    "tests/e2e/test_outbox_api.py": "0c210a355ca0c9c1a22caff2d79bb464cab2fb5a9ce71bd2f28858287e497d9e",
+    "tests/e2e/test_warehouse_recovery_api.py": "e9a2a4dc1470372bcbe09547884b1de4bc3991c2b2a8218fde21b510859e1ce8",
+    "tests/e2e/test_web.py": "3dcc7d992f2dca14cb82431dea045913930b10e429a656a8d7ca5403f236acf7",
+    "tests/evaluation/test_diagnostics_v2.py": "38e8afd4fb5fb4a9c8b71153921380fae2e269a69ae7490074917c6671827cb5",
+    "tests/evaluation/test_diagnostics_v3.py": "3a64a63c7b66b8e4d6f92bae35d562fdc2af040c64e8b56219d2e44fd3e80fac",
+    "tests/evaluation/test_diagnostics_v4.py": "2449a93ed10ab62238429dbdcf4d00e111e1f4c35eb6accff2614a4514c5fb61",
+    "tests/evaluation/test_diagnostics_v5.py": "9ae9af2891c654f2aac74d9eeac26d2305dab8f45741119ae61dc7640ec43126",
+    "tests/evaluation/test_evaluator.py": "d9823583b8d85387d1e796047b43973a7bd1bcbd1c5645c00fdd37573b52cb25",
+    "tests/evaluation/test_quantity_task_budgets.py": "64252c42e34a91e82c07e418a8709f7470817271c8e0a985de85dd93dc10be9a",
+    "tests/evaluation/test_regression_scope.py": "7c0f8440473ea5902a7c44f017fe11dd9c3e3867552748835b6f2198ad78f1d1",
+    "tests/evaluation/test_user_policy_v3.py": "73f2677268a34ec6074ae27f6f2ca71bd66846491295d559b11019a0e15c07f9",
+    "tests/integration/test_budget.py": "74cce666197c6688e557592fe7e7200bae1f47c80205ed818022713a2188d6d8",
+    "tests/integration/test_business.py": "5759d501ad86b50054e5c56333e515b45d32aed61568a720ae548c58ffd6e6fa",
+    "tests/integration/test_database_health.py": "8eb0589b544a8299cfd0b70e7ab2e14c577ed51e986cba4f564d90a193455ec2",
+    "tests/integration/test_demo_ledger_preservation.py": "96af786fc91b2ba704aaec03ff876312f13a7293c83b31604b26ec4c79c5b4d4",
+    "tests/integration/test_fulfillment.py": "b441fd10f7f9358cd08c6b4089fe48f0afadc6b756e5491321fccd69b7bbba91",
+    "tests/integration/test_fulfillment_migration.py": "c6ce50c6696db216bcbd501abc71c16abdeabd15aca41bfb17771fd42b2ca528",
+    "tests/integration/test_outbox.py": "bfceea5501181a830664b75d70ffa5a5bca06de467991dc2f2198a2cbad585c7",
+    "tests/integration/test_staff_auth.py": "45ab2c0f1a4ee4fb44c8ffa5a4c2da0418a064bd8f9a55f2435d6499c197a9d3",
+    "tests/integration/test_warehouse_recovery.py": "305a39a266878b98a5a4718767244a7d452e3644c726bf6f56e7ace5ac9277e6",
+    "tests/reliability/test_worker_input_preservation.py": "a345e2016612372cf9172da54fe22e5dbe164fb2b7f18a3db0c1f4b0ed107f4e",
+    "tests/retrieval/test_policies.py": "a653e750560008b59a37ff033a466b69633879c3e8244d49b86aa5bd96fc0c24",
+    "tests/unit/test_case_state.py": "821eb2fb84fd3b375ca20655a914e8afd74ad863326f8b446f10e79a67c6691a",
+    "tests/unit/test_mock_warehouse.py": "6953faa710b4e1e4b533006f26506013c5f031641deb8cc4f48b1b3c292f270b",
+    "tests/unit/test_mock_warehouse_callbacks.py": "7d36bf0681a0862f681931106f8e1a2329cbf678fc62297f55ef23a7a8fe48e5",
+    "tests/unit/test_outbox_cli.py": "f691b3a1befbfaac82b226f2723f077c4f50556b6ea15be6f9b3f1dddad1e346",
+    "tests/unit/test_phase0.py": "728839582532832069e20cd6d613c5988a4f98c48cbbef4f75562501598bc1fa",
+    "tests/unit/test_quantity_evidence.py": "456dad5e1da4798c5d44dbcfbb29a79a26e171aa54f369b7bbdd9b200ac4f50d",
+    "tests/unit/test_warehouse_attempt.py": "6aed8bcb6613fbed52021dd29afef3e755ff0de851b8af7387fa9102e52f8f2e",
+    "tests/unit/test_warehouse_callback_auth.py": "791dccb7798ce06abc95d89fea82ccb2e6f40d5f064d2859cc4b5acb443ae716",
+    "tests/unit/test_warehouse_config.py": "04587deffd58a1545d93cf1c5c076e43e272dd03e6cc02c5b4f1e4a1cfdd78a0",
+    "tests/unit/test_warehouse_http.py": "b7bcf0414b3c13b24c3b2ec24d9a222f5d717352613b8b244352c094657c76a1",
+    "tests/unit/test_warehouse_query_transport.py": "08ac4ac1eca59c5fc465d020ea868df8b29fcfac7d24f1e6112a9a30bd645ebb"
+  },
+  "source_fingerprint": "c9fbe517911c4956a262c3a9c496d2ea884b8a98b4e7ebafcdbfdf41783d74f4",
+  "first_unit_suite": {
+    "tests": 117,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 117,
+    "junit_time_seconds": 3.869,
+    "failure_cases": []
+  },
+  "query_transport_unit_suite": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 13,
+    "junit_time_seconds": 0.022,
+    "failure_cases": []
+  },
+  "first_integration_suite": {
+    "tests": 92,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 91,
+    "junit_time_seconds": 33.584,
+    "failure_cases": [
+      "tests.integration.test_warehouse_recovery::test_competing_external_id_query_and_callback_do_not_form_stock_index_lock_cycle"
+    ]
+  },
+  "targeted_repair_suite": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 1,
+    "junit_time_seconds": 0.455,
+    "failure_cases": []
+  },
+  "first_full_suite": {
+    "tests": 676,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "passed": 672,
+    "junit_time_seconds": 94.414,
+    "failure_cases": [],
+    "wall_time_seconds": 94.42,
+    "deselected_model_weights": 1
+  },
+  "scheduling_regression": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 1,
+    "junit_time_seconds": 1.824,
+    "failure_cases": [],
+    "wall_time_seconds": 1.82
+  },
+  "final_full_suite": {
+    "tests": 677,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "passed": 673,
+    "junit_time_seconds": 98.632,
+    "failure_cases": [],
+    "wall_time_seconds": 98.66,
+    "deselected_model_weights": 1
+  },
+  "new_tests": {
+    "tests.e2e.test_warehouse_recovery_api": 38,
+    "tests.integration.test_warehouse_recovery": 39,
+    "tests.unit.test_mock_warehouse_callbacks": 34,
+    "tests.unit.test_warehouse_callback_auth": 17,
+    "tests.unit.test_warehouse_query_transport": 13
+  },
+  "new_test_total": 141,
+  "first_failure_and_fix": "A test read provider_external_id from columns(), which omits None fields. It raised KeyError for the non-winning request after the uniqueness/concurrency assertions. The repaired assertion reads the real nullable database column directly; stock and concurrency assertions remain. First failure is retained.",
+  "final_audit_fix": "Old requests with existing tasks/conflicts could repeatedly fill the first 20 scheduling candidates. Final candidate selection excludes successful requests and any existing ReconciliationTask. A 21-history-plus-new-UNKNOWN regression proves progress without resetting old budgets or changing inventory. Full-final and http-final revalidate the updated source.",
+  "known_skips": "Four optional tau2 import skips and one model_weights deselection retained; no new C2 skips. Focused suites overlap and are not added together.",
+  "protected_paths_unchanged": true,
+  "protected_entries": {
+    "migrations/env.py": "14e51b18bda5e29cfc5b8f45d9cf0ff08e4ff59b95b6bc1f2918450a2be7febf",
+    "migrations/script.py.mako": "6d5c8099f4a2b06249f18549b4b026726e24cf4d8b27d8172c5fe98a66cc410d",
+    "migrations/sql/0002_business.sql": "92535fe2a6eff197ca63f5ca0412b57143459c138f3c48122b74271d071c5ed6",
+    "migrations/versions/0001_bootstrap.py": "3e746d7019ec378b49262fc9c80d5832095e663cb37e7e54425552adbc456a8b",
+    "migrations/versions/0002_business.py": "e6508da69a56edbf84ca2f577430b114bf0d0f4edd09c0c8f7ab1f035ec4e060",
+    "migrations/versions/0003_retrieval.py": "6e4f5db1d8d391273bee01daf5fe6d07c7822714081e0f8131f240a0e4d33e0f",
+    "migrations/versions/0004_budget.py": "3783e4528b4217cec5602aa4ce987bb09f32a61d0da6fefd2d5a2d92350a66ba",
+    "migrations/versions/0005_web_jobs.py": "08bf4731f16caf68b1c6f98f190a217b91c5279fb39b976f873ec69191efe92a",
+    "migrations/versions/0006_experiments.py": "ffe1d33e31986ce0f6a4b8332ae57adf187c963846569f78cd081f9679b4c61e",
+    "migrations/versions/0007_exchange_fulfillment.py": "98400288a47e3c22870543012d669a9268355a24b3c243fb1ef5357b78775a8b",
+    "migrations/versions/0008_staff_auth.py": "91e3aaf28f3cfb7087b6bb57db551c58a7a89684f5ad1712a88570c2965899ba",
+    "migrations/versions/0009_warehouse_outbox.py": "091159a15408b4800b10f8db8db7f830aeef004ff5cd37df64c61d919c909e01",
+    "pyproject.toml": "474aad33fe283f3d7064482ad87fdbbe6597c4fc5b73ae93aaeba78533dfec13",
+    "requirements.lock": "44388bf7ef0c789719a917fd2a862c30f8fbaeca40458582f88f8701c0c9aa65",
+    "src/aftercare/agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aftercare/agent/context.py": "f7d4f29edd45081c14d4bcdaa3cc859567c3cfc6c9ddc2a9c72327f986f4fb22",
+    "src/aftercare/agent/continuation.py": "433b327b45d1c4de503da7d1162ecc680bf2d57bf85b5689430b488d70d90d9f",
+    "src/aftercare/agent/demo.py": "93c63c3fd7d81aabf994da58df8565f04c6c1f77129bb450ef385237d47ae0cd",
+    "src/aftercare/agent/instructions.py": "3f41e2789bf9e2730ba74554a6c773a20d37643a9d1b819e9663c7b2675c577c",
+    "src/aftercare/agent/middleware.py": "9fba0e9d3302d649f977d1219e33ed70d370079531b4ff656e0d253826cae001",
+    "src/aftercare/agent/presentation.py": "6ff65ec11b0e39a01b14f17aa90e83117faaded11f345e5d8794592d559db074",
+    "src/aftercare/agent/runtime.py": "a9435f3db92e050a48b5529876b837f5df63c15cf3f4346b353d950f5184e6d2",
+    "src/aftercare/agent/tools.py": "1d6ae7993a955b02a4a10c9b6ac0b288f482ce87d83d15b52b84c185bc23768c",
+    "src/aftercare/agent/workflow.py": "4446267c5b8bce9a51d5186eec189c0c742ec565c8902790ea4f5897dc7b3423",
+    "src/aftercare/api/routes.py": "157889eb5c41ffee8cb2d178f87a0edb46d3544c4451c32689fd6d84b008d25c",
+    "src/aftercare/domain/fulfillment.py": "03ff5808c16f185285a23fca8d624940c334bcfbf5e82ccd70cc011f612039ed",
+    "src/aftercare/services/business.py": "92168360f1faa56d9e700566046ede66aeb4592bdcc656c9b6fb139486b1a348",
+    "src/aftercare/services/demo.py": "53026daa6a41b9e73e5e41739333f9575b7aa3b68daec6acbc36535bb15e9528",
+    "src/aftercare/services/staff_auth.py": "bc2a9478b43d6106845252b08de75b82147fbf4baea3aa5a7c73ddab1112f3fc",
+    "src/aftercare/workers/queue.py": "168b739cb8461c4c6b815432a1b58fecb3ce7e0956fd627e86a713bc864e974f",
+    "src/aftercare/workers/worker.py": "04c68828f56b9e084732ab9de84c358fcbd4b636c7df209f42e97e704d52d9b0"
+  },
+  "intentional_c1_test_extension": {
+    "paths": [
+      "tests/e2e/test_outbox_api.py"
+    ],
+    "reason": "Keep original privacy/state assertions; extend safe GET summary keys and replace planned-C2-absence assertions with warehouse-role 403 checks on the now-implemented support routes."
+  },
+  "historical_c1_unknown_recovery": {
+    "result": "PASSED",
+    "elapsed_seconds": 2.87,
+    "performed_before_any_postgresql_fixture_reset": true,
+    "provider_post_requests_by_script": 0,
+    "cases": [
+      {
+        "name": "accepted-lost",
+        "application_id": "app_d6460d32813f4edfbae82d3d9fab09d2",
+        "before_request_status": "UNKNOWN",
+        "after_request_status": "SUCCEEDED",
+        "before_version": 5,
+        "after_version": 6,
+        "reservation": "CONSUMED",
+        "external_shipment_id": "MOCK-355da18c32195a3b39bd995e40f76737a1df5f5482d72bb29c10e5a14b6ac53c",
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "killed",
+        "application_id": "app_bca18eddba1c4ec38c27508e55caba9a",
+        "before_request_status": "UNKNOWN",
+        "after_request_status": "SUCCEEDED",
+        "before_version": 5,
+        "after_version": 6,
+        "reservation": "CONSUMED",
+        "external_shipment_id": "MOCK-ef0a48176931e01c76ec90efc65dbf61508dc50e7d85bd89d13f87790af52456",
+        "original_receipt_unchanged": true
+      }
+    ],
+    "original_provider_facts_unchanged": true,
+    "third_worker_preserved_state": true,
+    "cleanup": {
+      "children_stopped": true,
+      "provider_port_closed": true,
+      "errors": []
+    },
+    "frozen_c1_snapshot_unchanged": true,
+    "frozen_c1_snapshot": {
+      "path": "runtime/backend-C1/provider-final.sqlite3",
+      "sha256": "dbe664910323d6c53cf4b4b2b148758915843f17d6bb44b7ba67a161ef5db652",
+      "total_rows": 5,
+      "includes_provider_only_protocol_record": true
+    },
+    "raw_result": "runtime/backend-C2/c1-recovery-first/recovery-first.json"
+  },
+  "first_process_matrix": {
+    "result": "PASSED",
+    "completed": 8,
+    "elapsed_seconds": 24.567,
+    "raw_result": "runtime/backend-C2/http-first/http-first.json"
+  },
+  "final_process_matrix": {
+    "result": "PASSED",
+    "required": [
+      "before-send-exit",
+      "query-recovers-unknown",
+      "post-accept-kill",
+      "query-takeover",
+      "early-callback",
+      "callback-ordering",
+      "query-exhaustion",
+      "authorized-redrive"
+    ],
+    "completed": [
+      "before-send-exit",
+      "query-recovers-unknown",
+      "post-accept-kill",
+      "query-takeover",
+      "early-callback",
+      "callback-ordering",
+      "query-exhaustion",
+      "authorized-redrive"
+    ],
+    "not_completed": [],
+    "elapsed_seconds": 24.613,
+    "time_budget_seconds": 180,
+    "scenarios": [
+      {
+        "name": "before-send-exit",
+        "application": {
+          "id": "app_14b4d1062bb145038da2a975feba4017",
+          "status": "COMPLETED",
+          "version": 7
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "status": "NOT_SCHEDULED",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-46dfbf64ed9052be0c2c585352f18947a37397cc1effeca039e6dfb65d0cc766"
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "query-recovers-unknown",
+        "application": {
+          "id": "app_03e11b0a39034acb8a03011c264724ff",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "id": "recon_087fcae24f7047219df218ec0e56254b",
+          "status": "DONE",
+          "attempts": 1,
+          "cycle": 1,
+          "next_attempt_at": "2026-10-28T14:09:09.408654+00:00",
+          "deadline_at": "2026-10-28T14:10:09.408654+00:00",
+          "created_at": "2026-10-28T14:09:09.408654+00:00",
+          "updated_at": "2026-10-28T14:09:09.602110+00:00",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-aa953d33b2bdfcd628edd105400544dd0328795c155ecaaa2199cc0597e89fed"
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "post-accept-kill",
+        "application": {
+          "id": "app_b382c8cef7d543089923bcf81b123e5d",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "id": "recon_57e2346353b74c0c8750da8829d069a3",
+          "status": "DONE",
+          "attempts": 1,
+          "cycle": 1,
+          "next_attempt_at": "2026-10-28T14:09:13.381022+00:00",
+          "deadline_at": "2026-10-28T14:10:13.381022+00:00",
+          "created_at": "2026-10-28T14:09:13.381022+00:00",
+          "updated_at": "2026-10-28T14:09:13.562689+00:00",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-1ba0ae5545440c967450cbf18e539f9bbb0dbc8b444ef764f3c46e5797d46bc3"
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "query-takeover",
+        "application": {
+          "id": "app_e422db123e244daf92433c7a89497357",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "id": "recon_f812b8c669944bb99fbbbaa673f29d97",
+          "status": "DONE",
+          "attempts": 2,
+          "cycle": 1,
+          "next_attempt_at": "2026-10-28T14:09:17.751335+00:00",
+          "deadline_at": "2026-10-28T14:10:14.471293+00:00",
+          "created_at": "2026-10-28T14:09:14.471293+00:00",
+          "updated_at": "2026-10-28T14:09:17.957573+00:00",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-4b6598984e97ce11c06b10ac656283fd0abeba0083e70d34667f90bb6da2583e"
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "early-callback",
+        "application": {
+          "id": "app_7598d348fdf7405a8faf73c3bbb68450",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "status": "NOT_SCHEDULED",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-476d7b981c1248ffb1d367de598c5f5277bb57a5c718cbe6ae99e1a69e65e5fb"
+        },
+        "inbox_records": 2,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "callback-ordering",
+        "application": {
+          "id": "app_9efe6c2d54db4d9c83120ff8ce0c27a6",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "id": "recon_60081c05224b428cb49d4e548d313b37",
+          "status": "DONE",
+          "attempts": 0,
+          "cycle": 1,
+          "next_attempt_at": "2026-10-28T14:09:22.108394+00:00",
+          "deadline_at": "2026-10-28T14:10:22.108394+00:00",
+          "created_at": "2026-10-28T14:09:22.108394+00:00",
+          "updated_at": "2026-10-28T14:09:22.162594+00:00",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-4fb88136c31c07c2665c91a13a780362e84ca920f18ae64e6348875f5cb449d2"
+        },
+        "inbox_records": 3,
+        "conflict_records": 2,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "query-exhaustion",
+        "application": {
+          "id": "app_aec0e0c08c8b44b5af27efb0cffa6fd0",
+          "status": "REPLACEMENT_PENDING",
+          "version": 5
+        },
+        "request_status": "MANUAL_REVIEW",
+        "outbox_status": "DEAD",
+        "reservation_status": "RESERVED",
+        "provider_rows": 1,
+        "attempts": 1,
+        "reconciliation": {
+          "id": "recon_31e9dd1ae60643148e9e0a4065c61d90",
+          "status": "EXHAUSTED",
+          "attempts": 3,
+          "cycle": 1,
+          "next_attempt_at": "2026-10-28T14:09:27.435199+00:00",
+          "deadline_at": "2026-10-28T14:10:23.789613+00:00",
+          "last_error_code": "WAREHOUSE_QUERY_UNAVAILABLE",
+          "created_at": "2026-10-28T14:09:23.789613+00:00",
+          "updated_at": "2026-10-28T14:09:27.874233+00:00",
+          "last_sequence": 0
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      },
+      {
+        "name": "authorized-redrive",
+        "application": {
+          "id": "app_faf844968d1c4c2dba8b379394a2f924",
+          "status": "REPLACEMENT_SHIPPED",
+          "version": 6
+        },
+        "request_status": "SUCCEEDED",
+        "outbox_status": "DELIVERED",
+        "reservation_status": "CONSUMED",
+        "provider_rows": 1,
+        "attempts": 2,
+        "reconciliation": {
+          "status": "NOT_SCHEDULED",
+          "last_sequence": 2,
+          "provider_external_id": "MOCK-fd8a45cc12fe4ea2f9cccb4e4c3bf6b0ab4baf2270ff8e863043c7eae7e5a959"
+        },
+        "inbox_records": 0,
+        "conflict_records": 0,
+        "original_receipt_unchanged": true
+      }
+    ],
+    "processes": [
+      {
+        "label": "create-support",
+        "pid": 11872,
+        "returncode": 0
+      },
+      {
+        "label": "create-warehouse",
+        "pid": 11873,
+        "returncode": 0
+      },
+      {
+        "label": "provider-callbacks-off",
+        "pid": 11874,
+        "returncode": -15
+      },
+      {
+        "label": "product-http",
+        "pid": 11875,
+        "returncode": -15
+      },
+      {
+        "label": "consumer-stopped-before-claim",
+        "pid": 11877,
+        "returncode": -15
+      },
+      {
+        "label": "replacement-consumer-after-before-send-exit",
+        "pid": 11879,
+        "returncode": 0
+      },
+      {
+        "label": "query-recovers-unknown-delivery",
+        "pid": 11881,
+        "returncode": 0
+      },
+      {
+        "label": "recover-accepted-response-loss",
+        "pid": 11883,
+        "returncode": 0
+      },
+      {
+        "label": "delivery-killed-after-provider-accept",
+        "pid": 11885,
+        "returncode": -9
+      },
+      {
+        "label": "query-after-delivery-process-kill",
+        "pid": 11886,
+        "returncode": 0
+      },
+      {
+        "label": "query-takeover-delivery",
+        "pid": 11888,
+        "returncode": 0
+      },
+      {
+        "label": "old-query-paused-after-get",
+        "pid": 11890,
+        "returncode": 0
+      },
+      {
+        "label": "replacement-query-after-expired-lease",
+        "pid": 11892,
+        "returncode": 0
+      },
+      {
+        "label": "provider-early-callbacks-on",
+        "pid": 11894,
+        "returncode": -15
+      },
+      {
+        "label": "delivery-races-early-callbacks",
+        "pid": 11898,
+        "returncode": 0
+      },
+      {
+        "label": "provider-callbacks-off-again",
+        "pid": 11902,
+        "returncode": -15
+      },
+      {
+        "label": "callback-ordering-delivery",
+        "pid": 11906,
+        "returncode": 0
+      },
+      {
+        "label": "callback-sender-sequence-1",
+        "pid": 11910,
+        "returncode": 0
+      },
+      {
+        "label": "callback-sender-sequence-2",
+        "pid": 11912,
+        "returncode": 0
+      },
+      {
+        "label": "query-exhaustion-delivery",
+        "pid": 11914,
+        "returncode": 0
+      },
+      {
+        "label": "unavailable-query-1",
+        "pid": 11916,
+        "returncode": 0
+      },
+      {
+        "label": "unavailable-query-2",
+        "pid": 11921,
+        "returncode": 0
+      },
+      {
+        "label": "unavailable-query-3",
+        "pid": 11924,
+        "returncode": 0
+      },
+      {
+        "label": "exhausted-budget-does-not-reopen",
+        "pid": 11926,
+        "returncode": 0
+      },
+      {
+        "label": "permanent-rejection-before-authorized-redrive",
+        "pid": 11927,
+        "returncode": 0
+      },
+      {
+        "label": "delivery-after-authorized-redrive",
+        "pid": 11929,
+        "returncode": 0
+      },
+      {
+        "label": "disable-temporary-staff",
+        "pid": 11931,
+        "returncode": 0
+      },
+      {
+        "label": "disable-temporary-staff",
+        "pid": 11932,
+        "returncode": 0
+      }
+    ],
+    "inventory_final": {
+      "variant_id": "c2-e1cb5ff95875-target",
+      "available": 12,
+      "reserved": 1,
+      "version": 16
+    },
+    "cleanup": {
+      "temporary_staff_disabled": true,
+      "children_stopped": true,
+      "errors": []
+    },
+    "raw_result": "runtime/backend-C2/http-final/http-first.json"
+  },
+  "database_verification": {
+    "date": "2026-10-28",
+    "target": "127.0.0.1:55434/aftercare_test",
+    "read_only": true,
+    "writes": 0,
+    "revision": [
+      "0010_warehouse_recovery"
+    ],
+    "migration_temporary_schemas": 0,
+    "inventory_invariant_violations": 0,
+    "order_quantity_invariant_violations": 0,
+    "status_counts": {
+      "shipment_requests": {
+        "MANUAL_REVIEW": 1,
+        "SUCCEEDED": 7
+      },
+      "warehouse_outbox": {
+        "DEAD": 1,
+        "DELIVERED": 7
+      },
+      "reconciliation_tasks": {
+        "DONE": 4,
+        "EXHAUSTED": 1
+      },
+      "warehouse_inbox": {
+        "PENDING": 1,
+        "PROCESSED": 4,
+        "STALE": 1
+      }
+    },
+    "inbox_conflict_records": 2,
+    "authorized_recovery_commands": 1,
+    "temporary_accounts_disabled": true,
+    "temporary_accounts_checked": 2,
+    "synthetic_inventory_final": {
+      "variant_id": "c2-e1cb5ff95875-target",
+      "available": 12,
+      "reserved": 1,
+      "version": 16
+    },
+    "health": {
+      "status": "ready",
+      "code": "OK"
+    },
+    "test_service_ports_closed": [
+      8134,
+      8141,
+      8142
+    ],
+    "provider_quick_check": "ok",
+    "provider_shipments": 8,
+    "provider_distinct_keys": 8,
+    "provider_schema_version": 2,
+    "provider_callback_status_counts": {
+      "DELIVERED": 4,
+      "PENDING": 12
+    }
+  },
+  "evidence_sha256": {
+    "runtime/backend-C2/c1-recovery-first/db-migrate.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/db-migrate.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/processes.jsonl": "831eaadfce0233d8ecf07d0175384995defbc032ca2f8e4fb397441d0233fd9d",
+    "runtime/backend-C2/c1-recovery-first/provider.stderr.log": "a748463f076b81aa317d90f5eccfc7e71d31d2d1f0d056f4abe42e24cbd50a13",
+    "runtime/backend-C2/c1-recovery-first/provider.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/reconcile-1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/reconcile-1.stdout.log": "4c40e8e1facd00fb7db356ee9243ff667cc9dd13aa12b4a2f8fde52e2cd9bb57",
+    "runtime/backend-C2/c1-recovery-first/reconcile-2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/reconcile-2.stdout.log": "92f7a9cdba3a09eb8811752e9288b5187d09ea227c667e868de97a0cd995044b",
+    "runtime/backend-C2/c1-recovery-first/reconcile-idle.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/c1-recovery-first/reconcile-idle.stdout.log": "a27e0f51ab335b03ea5b825e399bf1190c9d8d99477705baa3d5a9e784020d9a",
+    "runtime/backend-C2/c1-recovery-first/recovery-first.json": "c90fdcfdec7699989c27183da346f8b46985f887a0cf65a2c2cb851e972ef009",
+    "runtime/backend-C2/c1-recovery-first-launch.log": "f687706e0bc47ad8e0b9767d8d576cb2dd2af561465180e16f700a3a27b7f635",
+    "runtime/backend-C2/database-final.json": "7feaa0f0eda0a8aaf5cacbdb110cd41b1fe961612bec85ca39b191b3aa8c8d2f",
+    "runtime/backend-C2/diff-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/backend-C2/format-current.log": "433b487039d8bbdf0a0027eb9984140ff9577abcf59eee9585a205de2200efda",
+    "runtime/backend-C2/format-final.log": "b19d179c4b7ef6a7b3dca05724fe3680bd1b329a78249c27aa75d121e5551902",
+    "runtime/backend-C2/full-final.log": "96d0ec4b33924a232cb94b6f69feed326463753ceb16fc3d8a9503c5f93d6486",
+    "runtime/backend-C2/full-final.xml": "5d90750c011acd2c1f0bdccfa6a36c4f53970c5e9340de01976efdfc2acd34c2",
+    "runtime/backend-C2/full-first.log": "561f20378758d9f0e9788649aaf873ae4da541c2ee5d030ee0fc0e48f4ab787e",
+    "runtime/backend-C2/full-first.xml": "f143a7a2b6491af5bbdb96d06acf79f37013a2377cb30779cc53e7d63bce96e3",
+    "runtime/backend-C2/http-final/before-claim.json": "30cedc28432db3ba142935096a35988351a25cb6a8722df52d35351b60c33657",
+    "runtime/backend-C2/http-final/delivery-accepted-before-finish.json": "9ace51d1e3936c5cecadbfe61eaf79af9620557e93a4d5b39fc09e5a49d903cb",
+    "runtime/backend-C2/http-final/http-first.json": "32a721d7c4e26bdad26439f19c76d179705710eb490b36a5c5c4b4fd974b4035",
+    "runtime/backend-C2/http-final/processes.jsonl": "f16488863063cf7d2d86f58cbd550cad58fbde42638e3fab1486184ae7828c62",
+    "runtime/backend-C2/http-final/query-accepted.json": "aa6fb6ac76e25e20e4d228c6ffebc52fd9c4d1affdb867b6e26eb87edec568b4",
+    "runtime/backend-C2/http-final/query-go.flag": "0f0596782a3da675c3ffb1c8c3622c201ba452abadb2c420435af6f6c6fd38a5",
+    "runtime/backend-C2/http-final/query-old-finish.json": "7bc979598e5b354dfc8dbe44acd852bdf499cc22e84963e45fd0be292f4bb256",
+    "runtime/backend-C2/http-final-launch.log": "dad4ef5c62f21d9f077454c7e0d74eb290d02d082236edc9e4551624a835d06d",
+    "runtime/backend-C2/http-first/before-claim.json": "a6943dbd56c4c26bba1b72e35406e25b368546ae3081a2d9d38b671439beeac5",
+    "runtime/backend-C2/http-first/delivery-accepted-before-finish.json": "73a2154d7f8c02b95ea869888e16680818e2079239020f98c0ec88577a73e09a",
+    "runtime/backend-C2/http-first/http-first.json": "e4dc7ab818949aae14e043236707f757ac54c128a96090ae3c2049ffa2c11a5e",
+    "runtime/backend-C2/http-first/processes.jsonl": "f098700ceb100caa9ba22949b932d45c9ad63b21eeca1434efe98c70d6a80c6c",
+    "runtime/backend-C2/http-first/query-accepted.json": "d2b24045eb33d73961b8de5c468caccdd9674de96cf1d5b3f6b24cc1160adc00",
+    "runtime/backend-C2/http-first/query-go.flag": "0f0596782a3da675c3ffb1c8c3622c201ba452abadb2c420435af6f6c6fd38a5",
+    "runtime/backend-C2/http-first/query-old-finish.json": "56a60909901ca3cdc625a21fce1b5969d0f6c5bf8854e9c7f3dd94ca99056a7f",
+    "runtime/backend-C2/http-first-launch.log": "1cfb67c75cbffd6c933cd6d6267c0f824a9cb22599a6180bc020354e14caab53",
+    "runtime/backend-C2/integration-first.log": "b0f26a6ef71d942e404e3272a03ed82e9419b3815d0837ebc57ada9aab6e79f4",
+    "runtime/backend-C2/integration-first.xml": "dad73f7a6d37d7148b212da74623b90dcb032073c8e464e51f4831604d9deda4",
+    "runtime/backend-C2/integration-repair.log": "59517093a47ab691e39a7945856740a3886f4104270b3e83c40905d45b70e2d0",
+    "runtime/backend-C2/integration-repair.xml": "01dcafdb30865d662015df428fc1527fb730b500246c5e4fb705af3379c9fc37",
+    "runtime/backend-C2/pip-final.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "runtime/backend-C2/query-unit-first.log": "88b885bf0d04bb7711fb1a84807a68b6afe50e9be6fcff9af9a3d5ac868ee8bd",
+    "runtime/backend-C2/query-unit-first.xml": "e9a4a98bae7fae3e46339a43035bc5388b58dfdeb69fdbff8cbefa274528b402",
+    "runtime/backend-C2/ruff-current.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "runtime/backend-C2/ruff-final.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "runtime/backend-C2/scheduling-regression.log": "186aa9d97428e8a197a8f535fa4320e3e398a928cdf416b70bf6b457a0ab0520",
+    "runtime/backend-C2/scheduling-regression.xml": "26b06ffd84c0a9d27265573d440f613a9706f4b927dcbd739450912f52d48c39",
+    "runtime/backend-C2/unit-first.log": "5af76d560c42471fbaf7ea44edb7173b1dd7f706f351edb79b419c056081e158",
+    "runtime/backend-C2/unit-first.xml": "757c0b9355004da79e66e7d7b2e9b5eae0fadcc19d26d5877b230381a3a94eeb"
+  },
+  "consistent_provider_snapshots": {
+    "runtime/backend-C2/provider-final.sqlite3": "758c46b697a46e88b25b00fdb031975287c17f52e24cebdb150b6e4e87eefb8a",
+    "runtime/backend-C2/c1-recovery-first/provider-final.sqlite3": "a70722739ba72e176287898e284dd14139a9c099ae09ea38709aca0a3854f70d"
+  },
+  "volatile_files_not_fingerprinted": "Original live SQLite files and WAL/SHM retained; only consistent backup snapshots are fingerprinted.",
+  "documentation_sha256": {
+    "README.md": "af1059dc3798f85ced32f7b67fc7ee49d729bfe617b5b3179f69e4df4698fa34",
+    "AGENTS.md": "d190248d81d76028f269535da95cdf55a74cd404d09fdfd9ecda84aa0eff6565",
+    "docs/design/backend-fulfillment-roadmap.md": "d7e147ce37a44f1b5a954c7cda935fdbccb0c042fd057d15071776ab89b25342",
+    "docs/design/backend-C2-recovery-contract.md": "8256dc4756dd0b3cd6911032a6e50913ccc2f0fb73ad6e265adc7d496e3c2ecb",
+    "docs/handoffs/backend-C2.md": "c87855911179fd15f28ec1355752388d2feddd13ada7ccf055fc6d9740640d51"
+  },
+  "ruff_check": "passed",
+  "ruff_format": "passed",
+  "pip_check": "passed",
+  "git_diff_check": "passed",
+  "real_model_requests": 0,
+  "holdout_or_Test_run": false,
+  "new_dependencies": false,
+  "new_container_or_image": false,
+  "public_push": false,
+  "stage_D_started": false,
+  "limits": [
+    "Local single-merchant simulation and the documented protocol only; customer identity remains explicit demo login",
+    "Eight controlled engineering scenarios passed; business outcomes are one COMPLETED, six SHIPPED and one retained MANUAL_REVIEW, not an 8/8 business success or production reliability rate",
+    "One pending unknown-key Inbox and two conflict facts are retained; no fake success or deletion of evidence",
+    "Provider callback snapshot has four DELIVERED and twelve PENDING events because most scenarios intentionally disabled automatic push; not all callback messages were sent",
+    "A DONE query task after an authorized redrive needs explicit support reconcile if a later delivery becomes UNKNOWN; automatic recovery does not reopen ended budgets",
+    "Known-rejected redrive requires original key, safe prior attempts, support authorization, generation CAS and bounded cycles; ambiguous outcomes cannot be manually declared successful",
+    "After-accept HTTP 500 is not TCP socket severing. Real fault probes use production claim/query/finish functions at explicit pause points, not arbitrary process instruction coverage",
+    "No full GUI recovery-management interface, cross-browser audit, production alert integration, throughput/SLA benchmark, CI or container-network validation in C2",
+    "Per-attempt processes have a monotonic budget plus bounded cleanup; OS scheduling is not hard real time, and all parent/child death timings were not exhaustively tested",
+    "PostgreSQL fixture resets occurred only after the preserved C1 recovery proof was captured; current fault-case reservations remain intact"
+  ]
+}

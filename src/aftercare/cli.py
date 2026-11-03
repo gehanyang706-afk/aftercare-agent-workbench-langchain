@@ -1,14 +1,27 @@
 import argparse
+import getpass
 import importlib.metadata
 import json
+import os
 import platform
 import sys
+import time
 from pathlib import Path
 
 from pydantic import ValidationError
 
 from aftercare.config import PROJECT_ROOT, Settings
 from aftercare.offline import install_offline_guard
+
+
+def local_port(value):
+    try:
+        port = int(value)
+        if 1024 <= port <= 65535:
+            return port
+    except ValueError:
+        pass
+    raise argparse.ArgumentTypeError("PORT_MUST_BE_BETWEEN_1024_AND_65535")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -21,12 +34,33 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--port", type=int, default=8000)
             command.add_argument("--demo-faults", action="store_true")
             command.add_argument(
+                "--demo-login", action="store_true", help="显式开启本机演示客户入口"
+            )
+            command.add_argument(
+                "--simulate-warehouse", action="store_true", help="开启受权限保护的本地模拟出库"
+            )
+            command.add_argument(
+                "--async-warehouse", action="store_true", help="事务Outbox投递到独立本机模拟仓储"
+            )
+            command.add_argument(
                 "--container-network",
                 action="store_true",
                 help="容器内部监听所有接口；宿主映射仍须绑定 127.0.0.1",
             )
     db = commands.add_parser("db")
     db.add_argument("action", choices=["migrate", "current"])
+    staff = commands.add_parser("staff")
+    staff_actions = staff.add_subparsers(dest="staff_action", required=True)
+    create = staff_actions.add_parser("create")
+    create.add_argument("--username", required=True)
+    create.add_argument("--role", choices=["support", "warehouse"], required=True)
+    create.add_argument(
+        "--password-stdin", action="store_true", help="从标准输入读取密码；默认隐藏输入"
+    )
+    revoke = staff_actions.add_parser("revoke")
+    revoke.add_argument("--staff-id", required=True)
+    disable = staff_actions.add_parser("disable")
+    disable.add_argument("--staff-id", required=True)
     demo = commands.add_parser("demo")
     demos = demo.add_subparsers(dest="demo_action", required=True)
     seed = demos.add_parser("seed")
@@ -100,6 +134,28 @@ def parser() -> argparse.ArgumentParser:
     worker = commands.add_parser("worker")
     worker.add_argument("--provider", choices=["scripted"], default="scripted")
     worker.add_argument("--once", action="store_true")
+    outbox = commands.add_parser("outbox-worker", help="独立的本机仓储Outbox消费者")
+    outbox.add_argument("--once", action="store_true")
+    outbox.add_argument("--owner")
+    outbox.add_argument("--log-json", action="store_true", help="向stderr输出有界的结构化阶段日志")
+    reconciliation = commands.add_parser("reconciliation-worker", help="有界仓储查单与结果合并")
+    reconciliation.add_argument("--once", action="store_true")
+    reconciliation.add_argument("--owner")
+    reconciliation.add_argument(
+        "--log-json", action="store_true", help="向stderr输出有界的结构化阶段日志"
+    )
+    warehouse = commands.add_parser("mock-warehouse", help="独立持久化的本机模拟仓储")
+    warehouse.add_argument("--port", type=local_port, default=8140)
+    warehouse.add_argument(
+        "--state-path", type=Path, default=PROJECT_ROOT / "runtime/mock-warehouse/state.sqlite3"
+    )
+    warehouse.add_argument("--test-faults", action="store_true")
+    callbacks = commands.add_parser("mock-warehouse-callbacks", help="独立仓储持久回调发送器")
+    callbacks.add_argument("--once", action="store_true")
+    callbacks.add_argument("--effect-key")
+    callbacks.add_argument(
+        "--state-path", type=Path, default=PROJECT_ROOT / "runtime/mock-warehouse/state.sqlite3"
+    )
     return result
 
 
@@ -147,8 +203,49 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 1
     install_offline_guard()
+    if args.command in {"mock-warehouse", "mock-warehouse-callbacks"}:
+        import uvicorn
+
+        from aftercare.mock_warehouse.app import create_app as create_warehouse
+
+        try:
+            state_path = args.state_path.resolve()
+            if not state_path.is_relative_to((PROJECT_ROOT / "runtime").resolve()):
+                raise ValueError("WAREHOUSE_STATE_MUST_BE_PROJECT_RUNTIME")
+            callback_url = os.environ.get("MOCK_WAREHOUSE_CALLBACK_BASE_URL") or None
+            callback_secret = os.environ.get("MOCK_WAREHOUSE_CALLBACK_SECRET") or None
+            if args.command == "mock-warehouse-callbacks":
+                from aftercare.mock_warehouse.callbacks import CallbackSender
+
+                sender = CallbackSender(state_path, callback_url, callback_secret)
+                while True:
+                    result = sender.work_once(effect_key=args.effect_key)
+                    if args.once or result.get("status") != "IDLE":
+                        print(json.dumps(result, ensure_ascii=False), flush=True)
+                    if args.once:
+                        return 0
+                    time.sleep(0.5)
+            app = create_warehouse(
+                state_path,
+                os.environ.get("MOCK_WAREHOUSE_TOKEN", ""),
+                test_mode=args.test_faults,
+                callback_base_url=callback_url,
+                callback_secret=callback_secret,
+            )
+        except Exception:
+            print(json.dumps({"ok": False, "error_code": "MOCK_WAREHOUSE_CONFIG_INVALID"}))
+            return 2
+        uvicorn.run(app, host="127.0.0.1", port=args.port, access_log=False)
+        return 0
     try:
-        settings = Settings(offline=True, dev_faults=getattr(args, "demo_faults", False))
+        overrides = {"offline": True, "dev_faults": getattr(args, "demo_faults", False)}
+        if getattr(args, "demo_login", False):
+            overrides["demo_login_enabled"] = True
+        if getattr(args, "simulate_warehouse", False):
+            overrides["warehouse_simulation_enabled"] = True
+        if getattr(args, "async_warehouse", False):
+            overrides["warehouse_delivery_enabled"] = True
+        settings = Settings(**overrides)
     except ValidationError:
         print(json.dumps({"status": "invalid_config", "code": "CONFIG_INVALID"}))
         return 2
@@ -232,11 +329,69 @@ def main(argv: list[str] | None = None) -> int:
             print("DATABASE_COMMAND_FAILED: check local database availability and permissions")
             return 1
         return 0
+    if args.command == "staff":
+        from aftercare.domain.contracts import BusinessError
+        from aftercare.repositories.database import session_factory
+        from aftercare.services.demo import assert_dedicated
+        from aftercare.services.staff_auth import StaffAuthService
+
+        sessions = session_factory(settings)
+        try:
+            assert_dedicated(sessions)
+            auth = StaffAuthService(sessions)
+            if args.staff_action == "create":
+                password = (
+                    sys.stdin.readline().rstrip("\r\n")
+                    if args.password_stdin
+                    else getpass.getpass("员工密码（至少12字符）: ")
+                )
+                output = auth.create_account(args.username, password, args.role)
+            elif args.staff_action == "revoke":
+                output = auth.revoke_all(args.staff_id)
+            else:
+                output = auth.update_account(args.staff_id, active=False)
+            print(json.dumps(output, ensure_ascii=False))
+            return 0
+        except BusinessError as error:
+            print(json.dumps({"ok": False, "error_code": error.code}))
+            return 2
+        except Exception:
+            print(json.dumps({"ok": False, "error_code": "STAFF_COMMAND_FAILED"}))
+            return 1
+        finally:
+            sessions.kw["bind"].dispose()
+
     if args.command == "worker":
         from aftercare.workers.worker import work
 
         work(settings, once=args.once)
         return 0
+    if args.command in {"outbox-worker", "reconciliation-worker"}:
+        from aftercare.domain.contracts import BusinessError
+        from aftercare.workers.outbox_worker import work as outbox_work
+
+        try:
+            if args.command == "reconciliation-worker":
+                from aftercare.workers.reconciliation_worker import work as outbox_work
+            worker_options = {
+                "once": args.once,
+                "owner": args.owner,
+                "emit": lambda result: print(json.dumps(result, ensure_ascii=False), flush=True),
+            }
+            if args.log_json:
+                worker_options["log_json"] = True
+            outbox_work(settings, **worker_options)
+            return 0
+        except BusinessError as error:
+            print(json.dumps({"ok": False, "error_code": error.code}))
+        except Exception:
+            code = (
+                "RECONCILIATION_WORKER_STOPPED"
+                if args.command == "reconciliation-worker"
+                else "OUTBOX_WORKER_STOPPED"
+            )
+            print(json.dumps({"ok": False, "error_code": code}))
+        return 1
     if args.command == "retrieval":
         from aftercare.repositories.database import session_factory
         from aftercare.retrieval.engine import PolicySearch

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aftercare · 换货履约</title>
+  <link rel="stylesheet" href="/static/fulfillment.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><span class="brand-mark">a</span><span>Aftercare</span><small>换货履约</small></a>
+    <nav class="header-nav" aria-label="工作台导航"><a href="/">售后申请工作台 ↗</a></nav>
+    <span class="local-badge">本机 · 单商户演示</span>
+  </header>
+
+  <main>
+    <div class="page-intro">
+      <div><p class="eyebrow">AFTERCARE / FULFILLMENT</p><h1>从一份申请，走到换货完成。</h1><p>核对申请、按职责处理，每一步都留下记录。</p></div>
+      <span id="environment-note" class="environment-note">本页展示已确认提交的换货申请。</span>
+    </div>
+
+    <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+
+    <section id="login-panel" class="login-panel panel" aria-labelledby="login-title">
+      <div class="login-heading"><span class="section-kicker">开始处理</span><h2 id="login-title">进入履约工作台</h2><p>客户查看本人的申请，客服与仓库处理各自环节。</p></div>
+      <div id="login-grid" class="login-grid single">
+        <div id="customer-login-box" class="login-card" hidden>
+          <span class="role-icon" aria-hidden="true">↗</span><h3>客户</h3><p>查看申请、填写寄回信息，确认收到换货。</p>
+          <form id="customer-login-form">
+            <label for="customer-id">本地演示客户</label>
+            <select id="customer-id" name="customer_id"><option value="alice">小林</option><option value="bob">小陈</option><option value="carol">小周</option></select>
+            <button type="submit">进入客户工作台</button>
+          </form>
+        </div>
+        <div class="login-card">
+          <span class="role-icon" aria-hidden="true">✓</span><h3>客服与仓库</h3><p>使用员工账号登录，系统将显示相应的处理权限。</p>
+          <form id="staff-login-form">
+            <label for="staff-username">员工账号</label><input id="staff-username" name="username" autocomplete="username" maxlength="100" required>
+            <label for="staff-password">密码</label><input id="staff-password" name="password" type="password" autocomplete="current-password" required>
+            <button type="submit">员工登录</button>
+          </form>
+        </div>
+      </div>
+      <p id="customer-login-disabled" class="login-footnote" hidden>本地演示客户入口未启用。客户申请仍需从售后申请工作台提交并确认。</p>
+    </section>
+
+    <section id="workspace" hidden aria-label="履约处理工作区">
+      <div class="workspace-bar">
+        <div class="identity"><span id="current-role" class="role-badge"></span><span id="current-user"></span></div>
+        <div class="workspace-tools"><button id="refresh" class="button-secondary" type="button">刷新记录</button><button id="logout" class="button-quiet" type="button">退出登录</button></div>
+      </div>
+
+      <div id="pending-operation" class="pending-operation" role="status" hidden>
+        <div><strong>上一次操作的结果尚未确认</strong><p id="pending-description">可先刷新记录，或使用原请求重试。刷新和重试不会撤销已完成的操作。</p></div>
+        <div class="pending-tools"><button id="pending-refresh" class="button-secondary" type="button">查看最新记录</button><button id="retry-operation" type="button">重试原操作</button></div>
+      </div>
+
+      <div class="work-grid">
+        <aside class="panel applications-panel" aria-labelledby="applications-title">
+          <div class="panel-heading"><div><span class="section-kicker">01 / 换货申请</span><h2 id="applications-title">申请列表</h2></div><span id="page-count" class="muted">0 条</span></div>
+          <div id="applications-empty" class="list-empty"><h3>暂无换货申请</h3><p id="list-empty-description">已确认提交的换货申请会显示在这里。</p><a id="create-application" href="/" hidden>前往提交售后申请 ↗</a></div>
+          <ul id="applications-list" class="applications-list" aria-label="换货申请列表"></ul>
+          <div class="pagination"><button id="previous-page" class="button-quiet" type="button" disabled>← 上一页</button><span id="page-number">第 1 页</span><button id="next-page" class="button-quiet" type="button" disabled>下一页 →</button></div>
+        </aside>
+
+        <section class="panel detail-panel" aria-labelledby="detail-title">
+          <div id="detail-empty" class="detail-empty"><span aria-hidden="true">↗</span><h2 id="detail-title">选择一条换货申请</h2><p>查看当前进度、处理动作和完整记录。</p></div>
+          <div id="application-detail" hidden>
+            <div class="detail-heading"><div><span class="section-kicker">02 / 申请详情</span><h2 id="application-number"></h2></div><span id="application-status" class="status-badge"></span></div>
+            <div class="detail-content">
+              <p id="status-description" class="status-description"></p>
+              <dl id="application-facts" class="facts"></dl>
+              <div id="historical-note" class="historical-note" hidden>这是一条历史记录，尚未记录的履约凭据将显示为空。</div>
+
+              <section class="detail-section" aria-labelledby="action-title"><div class="section-heading"><h3 id="action-title">当前可处理</h3><span id="action-hint" class="muted"></span></div><div id="action-controls" class="action-controls"></div><p id="no-actions" class="muted" hidden>当前没有需要此身份处理的动作，可以刷新查看最新进度。</p></section>
+
+              <section class="detail-section" aria-labelledby="proof-title"><div class="section-heading"><h3 id="proof-title">履约凭据</h3><span id="simulation-label" class="small-badge" hidden>本地模拟出库</span></div><dl id="fulfillment-facts" class="facts"></dl></section>
+
+              <details class="submission-receipt"><summary>查看原申请提交凭据</summary><dl id="submission-facts" class="facts"></dl><p id="submission-notice" class="muted"></p></details>
+
+              <section class="detail-section" aria-labelledby="history-title"><div class="section-heading"><h3 id="history-title">处理时间线</h3><span id="history-count" class="muted"></span></div><ol id="history-list" class="history-list"></ol></section>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer><span>Aftercare / 换货履约工作台</span><span>申请凭据与当前履约进度分别记录</span></footer>
+  <script type="module" src="/static/fulfillment.js"></script>
+</body>
+</html>

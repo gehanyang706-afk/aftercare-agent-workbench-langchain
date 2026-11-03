@@ -1,0 +1,362 @@
+{
+  "date": "2026-10-27",
+  "stage": "A",
+  "status": "accepted_with_documented_measurement_scope",
+  "product_code_changed_this_review": false,
+  "suite_rerun_this_review": false,
+  "baseline_rerun_this_review": false,
+  "pip_check": "No broken requirements found",
+  "artifact_verification": {
+    "product_python_hash_matches_baseline": true,
+    "script_hash_matches_baseline": true,
+    "requirements_hash_matches_baseline": true,
+    "web_assets_match_baseline": true,
+    "evidence_files_match": true,
+    "deepagents_absent": true,
+    "measurement_cases": 14,
+    "measurement_samples": 420,
+    "fixture_cleanup_count_match": true,
+    "versions": {
+      "langchain": "1.4.6",
+      "langchain-core": "1.6.12",
+      "langgraph": "1.2.16",
+      "langgraph-checkpoint-postgres": "3.2.0",
+      "fastapi": "0.143.3",
+      "sqlalchemy": "2.0.55",
+      "psycopg": "3.3.6"
+    },
+    "recorded_suite": {
+      "tests": "276",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "4",
+      "time": "28.448"
+    }
+  },
+  "read_only_database_verification": {
+    "target": "127.0.0.1:55434/aftercare_test",
+    "identity": {
+      "database": "aftercare_test",
+      "role": "aftercare",
+      "read_only": "on",
+      "server_version": "17.11 (Debian 17.11-1.pgdg12+2)"
+    },
+    "revisions": [
+      "0006_experiments"
+    ],
+    "vector": true,
+    "columns": [
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "operation_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "line_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "action",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "quantity",
+        "data_type": "integer",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "target_variant",
+        "data_type": "character varying",
+        "is_nullable": "YES"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "column_name": "status",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "column_name": "application_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "column_name": "variant_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "column_name": "quantity",
+        "data_type": "integer",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "column_name": "status",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "conversation_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "message_id",
+        "data_type": "character varying",
+        "is_nullable": "YES"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "dedup_key",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "kind",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "revision",
+        "data_type": "integer",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "status",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "lease_owner",
+        "data_type": "character varying",
+        "is_nullable": "YES"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "lease_expires_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "YES"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "attempt",
+        "data_type": "integer",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "cancel_requested",
+        "data_type": "boolean",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "result",
+        "data_type": "json",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "jobs",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "preview_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "customer_id",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "idempotency_key",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "request_hash",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "status",
+        "data_type": "character varying",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "receipt",
+        "data_type": "json",
+        "is_nullable": "NO"
+      },
+      {
+        "table_name": "operations",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO"
+      }
+    ],
+    "constraints": [
+      {
+        "table_name": "aftercare_requests",
+        "type": "f",
+        "definition": "FOREIGN KEY (line_id) REFERENCES order_lines(id)"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "type": "f",
+        "definition": "FOREIGN KEY (operation_id) REFERENCES operations(id)"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "type": "u",
+        "definition": "UNIQUE (operation_id)"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "type": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "type": "c",
+        "definition": "CHECK ((quantity > 0))"
+      },
+      {
+        "table_name": "aftercare_requests",
+        "type": "f",
+        "definition": "FOREIGN KEY (target_variant) REFERENCES variants(id)"
+      },
+      {
+        "table_name": "inventory",
+        "type": "c",
+        "definition": "CHECK (((available >= 0) AND (reserved >= 0)))"
+      },
+      {
+        "table_name": "inventory",
+        "type": "p",
+        "definition": "PRIMARY KEY (variant_id)"
+      },
+      {
+        "table_name": "inventory",
+        "type": "f",
+        "definition": "FOREIGN KEY (variant_id) REFERENCES variants(id)"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "type": "f",
+        "definition": "FOREIGN KEY (application_id) REFERENCES aftercare_requests(id)"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "type": "p",
+        "definition": "PRIMARY KEY (application_id)"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "type": "c",
+        "definition": "CHECK ((quantity > 0))"
+      },
+      {
+        "table_name": "inventory_reservations",
+        "type": "f",
+        "definition": "FOREIGN KEY (variant_id) REFERENCES inventory(variant_id)"
+      },
+      {
+        "table_name": "operations",
+        "type": "f",
+        "definition": "FOREIGN KEY (customer_id) REFERENCES customers(id)"
+      },
+      {
+        "table_name": "operations",
+        "type": "u",
+        "definition": "UNIQUE (customer_id, idempotency_key)"
+      },
+      {
+        "table_name": "operations",
+        "type": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "operations",
+        "type": "f",
+        "definition": "FOREIGN KEY (preview_id) REFERENCES action_previews(id)"
+      },
+      {
+        "table_name": "operations",
+        "type": "u",
+        "definition": "UNIQUE (preview_id)"
+      },
+      {
+        "table_name": "order_lines",
+        "type": "c",
+        "definition": "CHECK (((quantity > 0) AND (occupied >= 0) AND (occupied <= quantity)))"
+      },
+      {
+        "table_name": "order_lines",
+        "type": "f",
+        "definition": "FOREIGN KEY (order_id) REFERENCES orders(id)"
+      },
+      {
+        "table_name": "order_lines",
+        "type": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "order_lines",
+        "type": "f",
+        "definition": "FOREIGN KEY (variant_id) REFERENCES variants(id)"
+      }
+    ],
+    "writes": 0
+  },
+  "verification_evidence_sha256": {
+    "runtime/backend-A/acceptance-artifacts-check.json": "275d958ab67df61dfd4c72f78a16eb1b14e971c30549f8f0b32e5c76ce690b5c",
+    "runtime/backend-A/acceptance-database-check.json": "c7f5e2980ade8a46d8869b1849f3e12fb4ea12a44fb79965f98ba65f3d4d395d"
+  },
+  "original_baseline_report_sha256": "43f1087755764aed057a2d57d101de7c65e4abd8d126daf3b319ccb811d5df14",
+  "next_batch": "B1 domain model and transactional services; B2 auth/API/UI remains separate"
+}

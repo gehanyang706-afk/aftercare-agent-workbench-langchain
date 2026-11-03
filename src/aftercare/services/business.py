@@ -15,6 +15,8 @@ from aftercare.repositories.models import (
     Conversation,
     Customer,
     Event,
+    ExchangeFulfillment,
+    FulfillmentAudit,
     Handoff,
     IdempotencyBinding,
     Inventory,
@@ -143,11 +145,21 @@ class BusinessService:
                 select(Order).where(Order.id == order_id, Order.customer_id == principal)
             )
             require(order is not None, "NOT_FOUND")
+            lines = list(s.scalars(select(OrderLine).where(OrderLine.order_id == order_id)))
+            variant_ids = {line.variant_id for line in lines}
+            variants = (
+                {
+                    variant.id: variant
+                    for variant in s.scalars(select(Variant).where(Variant.id.in_(variant_ids)))
+                }
+                if variant_ids
+                else {}
+            )
             return {
                 **columns(order),
                 "lines": [
-                    {**columns(line), "variant": columns(s.get(Variant, line.variant_id))}
-                    for line in s.scalars(select(OrderLine).where(OrderLine.order_id == order_id))
+                    {**columns(line), "variant": columns(variants.get(line.variant_id))}
+                    for line in lines
                 ],
             }
 
@@ -474,6 +486,35 @@ class BusinessService:
                             quantity=payload["quantity"],
                         )
                     )
+                    s.add(
+                        ExchangeFulfillment(
+                            application_id=application_id,
+                            origin="native",
+                            created_at=self.clock(),
+                            updated_at=self.clock(),
+                        )
+                    )
+                    s.add(
+                        FulfillmentAudit(
+                            id=new_id("audit"),
+                            application_id=application_id,
+                            command_id=None,
+                            actor_id=principal,
+                            actor_role="customer",
+                            actor_source="trusted_confirmation",
+                            command="application_created",
+                            from_state=None,
+                            to_state=terminal,
+                            from_version=None,
+                            to_version=1,
+                            details={
+                                "operation_id": op_id,
+                                "preview_id": preview_id,
+                                "request_hash": request_hash,
+                            },
+                            created_at=self.clock(),
+                        )
+                    )
             order.version += 1
             row.status, conv.status = "COMMITTED", "COMPLETED"
             self.event(s, conv.id, "operation_committed", receipt)
@@ -537,6 +578,37 @@ class BusinessService:
             self.event(s, conv.id, "handoff_created", {"ticket_id": row.id, "reason": reason_code})
             return columns(row)
 
+    def _preview_views(self, s, conv):
+        previews = list(s.scalars(select(Preview).where(Preview.conversation_id == conv.id)))
+        target_ids = {
+            p.payload["target_variant"] for p in previews if p.payload.get("target_variant")
+        }
+        variants = (
+            {
+                variant.id: variant
+                for variant in s.scalars(select(Variant).where(Variant.id.in_(target_ids)))
+            }
+            if target_ids
+            else {}
+        )
+        return [
+            {
+                **columns(p),
+                "target_label": (
+                    f"{variants.get(p.payload['target_variant']).color} "
+                    f"{variants.get(p.payload['target_variant']).size} 码"
+                    if p.payload.get("target_variant")
+                    else None
+                ),
+                "confirmation_available": (
+                    p.status in {"PENDING", "CONFIRMED"}
+                    and p.revision == conv.revision
+                    and p.expires_at >= self.clock()
+                ),
+            }
+            for p in previews
+        ]
+
     def snapshot(self, principal, conversation_id):
         with self.sessions.begin() as s:
             conv = self._conversation(s, principal, conversation_id)
@@ -596,21 +668,5 @@ class BusinessService:
                         .order_by(Message.revision, Message.created_at, Message.id)
                     )
                 ],
-                "previews": [
-                    {
-                        **columns(p),
-                        "target_label": (
-                            f"{s.get(Variant, p.payload['target_variant']).color} "
-                            f"{s.get(Variant, p.payload['target_variant']).size} 码"
-                            if p.payload.get("target_variant")
-                            else None
-                        ),
-                        "confirmation_available": (
-                            p.status in {"PENDING", "CONFIRMED"}
-                            and p.revision == conv.revision
-                            and p.expires_at >= self.clock()
-                        ),
-                    }
-                    for p in s.scalars(select(Preview).where(Preview.conversation_id == conv.id))
-                ],
+                "previews": self._preview_views(s, conv),
             }

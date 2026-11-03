@@ -23,7 +23,16 @@ def main():
     subprocess.run([sys.executable, "-m", "aftercare", "demo", "seed"], check=True)
     with (output / "http-server.log").open("w") as log:
         process = subprocess.Popen(
-            [sys.executable, "-m", "aftercare", "serve", "--offline", "--port", "8131"],
+            [
+                sys.executable,
+                "-m",
+                "aftercare",
+                "serve",
+                "--offline",
+                "--demo-login",
+                "--port",
+                "8131",
+            ],
             stdout=log,
             stderr=subprocess.STDOUT,
         )

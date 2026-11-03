@@ -1,0 +1,1212 @@
+{
+  "stage": "A",
+  "schema_version": "backend-baseline-v1",
+  "real_model_requests": 0,
+  "product_behavior_changed": false,
+  "source_commit": "ed501ed012a2f3e986319523e6cc6c2aa73ff7e3",
+  "baseline_script_sha256": "90d3c98c29738830b82f705f190b5675f98eca363fe85f327aefc43bc2f326d0",
+  "product_source_sha256": "13988c28bac25142fd3e2b07701079d1c45a871bd7c7d3d8557d019430312329",
+  "requirements_sha256": "44388bf7ef0c789719a917fd2a862c30f8fbaeca40458582f88f8701c0c9aa65",
+  "host": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64",
+    "python": "3.13.14"
+  },
+  "database_target": "127.0.0.1:55434/aftercare_test",
+  "measurement_scope": "sequential in-process ASGI requests; not network QPS",
+  "sql_count_scope": "SQLAlchemy cursor executions; excludes driver ping/transaction IO",
+  "analyze_performed": false,
+  "postgresql_version": "17.11 (Debian 17.11-1.pgdg12+2)",
+  "other_active_connections": 0,
+  "fixtures": {
+    "previews-0": {
+      "messages": 10,
+      "previews": 0,
+      "events": 10
+    },
+    "previews-10": {
+      "messages": 10,
+      "previews": 10,
+      "events": 10
+    },
+    "previews-100": {
+      "messages": 10,
+      "previews": 100,
+      "events": 10
+    },
+    "messages-100": {
+      "messages": 100,
+      "previews": 0,
+      "events": 10
+    },
+    "messages-1000": {
+      "messages": 1000,
+      "previews": 0,
+      "events": 10
+    },
+    "events-100": {
+      "messages": 10,
+      "previews": 0,
+      "events": 100
+    },
+    "events-1000": {
+      "messages": 10,
+      "previews": 0,
+      "events": 1000
+    }
+  },
+  "measurements": [
+    {
+      "name": "order-lines-1",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 2.999,
+        "p95": 3.152
+      },
+      "application_sql_count": {
+        "min": 4,
+        "max": 4
+      },
+      "response_bytes": {
+        "min": 583,
+        "max": 583
+      },
+      "response_shape": {
+        "lines": 1
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT orders.id, orders.customer_id, orders.status, orders.paid_fen, orders.delivered_at, orders.version, orders.policy_version FROM orders WHERE orders.id = %(id_1)s::VARCHAR AND orders.customer_id = %(customer_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT order_lines.id, order_lines.order_id, order_lines.variant_id, order_lines.quantity, order_lines.occupied, order_lines.unused FROM order_lines WHERE order_lines.order_id = %(order_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT variants.id AS variants_id, variants.product_id AS variants_product_id, variants.title AS variants_title, variants.color AS variants_color, variants.size AS variants_size, variants.price_fen AS variants_price_fen, variants.returnable AS variants_returnable, variants.exchangeable AS variants_exchangeable, variants.category AS variants_category FROM variants WHERE variants.id = %(pk_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "order-lines-10",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 6.032,
+        "p95": 6.484
+      },
+      "application_sql_count": {
+        "min": 13,
+        "max": 13
+      },
+      "response_bytes": {
+        "min": 3998,
+        "max": 3998
+      },
+      "response_shape": {
+        "lines": 10
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT orders.id, orders.customer_id, orders.status, orders.paid_fen, orders.delivered_at, orders.version, orders.policy_version FROM orders WHERE orders.id = %(id_1)s::VARCHAR AND orders.customer_id = %(customer_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT order_lines.id, order_lines.order_id, order_lines.variant_id, order_lines.quantity, order_lines.occupied, order_lines.unused FROM order_lines WHERE order_lines.order_id = %(order_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT variants.id AS variants_id, variants.product_id AS variants_product_id, variants.title AS variants_title, variants.color AS variants_color, variants.size AS variants_size, variants.price_fen AS variants_price_fen, variants.returnable AS variants_returnable, variants.exchangeable AS variants_exchangeable, variants.category AS variants_category FROM variants WHERE variants.id = %(pk_1)s::VARCHAR",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "name": "order-lines-100",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 29.851,
+        "p95": 33.601
+      },
+      "application_sql_count": {
+        "min": 103,
+        "max": 103
+      },
+      "response_bytes": {
+        "min": 38670,
+        "max": 38670
+      },
+      "response_shape": {
+        "lines": 100
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT orders.id, orders.customer_id, orders.status, orders.paid_fen, orders.delivered_at, orders.version, orders.policy_version FROM orders WHERE orders.id = %(id_1)s::VARCHAR AND orders.customer_id = %(customer_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT order_lines.id, order_lines.order_id, order_lines.variant_id, order_lines.quantity, order_lines.occupied, order_lines.unused FROM order_lines WHERE order_lines.order_id = %(order_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT variants.id AS variants_id, variants.product_id AS variants_product_id, variants.title AS variants_title, variants.color AS variants_color, variants.size AS variants_size, variants.price_fen AS variants_price_fen, variants.returnable AS variants_returnable, variants.exchangeable AS variants_exchangeable, variants.category AS variants_category FROM variants WHERE variants.id = %(pk_1)s::VARCHAR",
+          "count": 100
+        }
+      ]
+    },
+    {
+      "name": "snapshot-previews-0",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 4.857,
+        "p95": 5.044
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 2529,
+        "max": 2529
+      },
+      "response_shape": {
+        "messages": 10,
+        "previews": 0,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-previews-10",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 10.668,
+        "p95": 10.928
+      },
+      "application_sql_count": {
+        "min": 29,
+        "max": 29
+      },
+      "response_bytes": {
+        "min": 8399,
+        "max": 8399
+      },
+      "response_shape": {
+        "messages": 10,
+        "previews": 10,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT variants.id AS variants_id, variants.product_id AS variants_product_id, variants.title AS variants_title, variants.color AS variants_color, variants.size AS variants_size, variants.price_fen AS variants_price_fen, variants.returnable AS variants_returnable, variants.exchangeable AS variants_exchangeable, variants.category AS variants_category FROM variants WHERE variants.id = %(pk_1)s::VARCHAR",
+          "count": 20
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-previews-100",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 57.999,
+        "p95": 62.09
+      },
+      "application_sql_count": {
+        "min": 209,
+        "max": 209
+      },
+      "response_bytes": {
+        "min": 61630,
+        "max": 61630
+      },
+      "response_shape": {
+        "messages": 10,
+        "previews": 100,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT variants.id AS variants_id, variants.product_id AS variants_product_id, variants.title AS variants_title, variants.color AS variants_color, variants.size AS variants_size, variants.price_fen AS variants_price_fen, variants.returnable AS variants_returnable, variants.exchangeable AS variants_exchangeable, variants.category AS variants_category FROM variants WHERE variants.id = %(pk_1)s::VARCHAR",
+          "count": 200
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-messages-100",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.664,
+        "p95": 6.094
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 23993,
+        "max": 23993
+      },
+      "response_shape": {
+        "messages": 100,
+        "previews": 0,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-messages-1000",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 14.299,
+        "p95": 27.846
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 242896,
+        "max": 242896
+      },
+      "response_shape": {
+        "messages": 1000,
+        "previews": 0,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-events-100",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.47,
+        "p95": 6.243
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 2529,
+        "max": 2529
+      },
+      "response_shape": {
+        "messages": 10,
+        "previews": 0,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "snapshot-events-1000",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.349,
+        "p95": 5.477
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 2550,
+        "max": 2550
+      },
+      "response_shape": {
+        "messages": 10,
+        "previews": 0,
+        "jobs": 0,
+        "operations": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT jobs.id, jobs.conversation_id, jobs.message_id, jobs.dedup_key, jobs.kind, jobs.revision, jobs.status, jobs.lease_owner, jobs.lease_expires_at, jobs.attempt, jobs.cancel_requested, jobs.result, jobs.created_at FROM jobs WHERE jobs.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "sse-once-10",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.492,
+        "p95": 5.637
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 2260,
+        "max": 2260
+      },
+      "response_shape": {
+        "events": 10
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 2
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.id > %(id_1)s::BIGINT ORDER BY events.id LIMIT %(param_1)s::INTEGER",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "sse-once-100",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.996,
+        "p95": 6.147
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 22690,
+        "max": 22690
+      },
+      "response_shape": {
+        "events": 100
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 2
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.id > %(id_1)s::BIGINT ORDER BY events.id LIMIT %(param_1)s::INTEGER",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "sse-once-1000",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 6.187,
+        "p95": 6.921
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 22790,
+        "max": 22790
+      },
+      "response_shape": {
+        "events": 100
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 2
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.id > %(id_1)s::BIGINT ORDER BY events.id LIMIT %(param_1)s::INTEGER",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "sse-replay-after-last",
+      "samples": 30,
+      "warmup": 3,
+      "asgi_latency_ms": {
+        "p50": 5.413,
+        "p95": 5.595
+      },
+      "application_sql_count": {
+        "min": 9,
+        "max": 9
+      },
+      "response_bytes": {
+        "min": 0,
+        "max": 0
+      },
+      "response_shape": {
+        "events": 0
+      },
+      "sql_fingerprints_one_request": [
+        {
+          "statement": "SELECT demo_sessions.token_hash AS demo_sessions_token_hash, demo_sessions.customer_id AS demo_sessions_customer_id, demo_sessions.csrf_token AS demo_sessions_csrf_token, demo_sessions.expires_at AS demo_sessions_expires_at FROM demo_sessions WHERE demo_sessions.token_hash = %(pk_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT conversations.id, conversations.customer_id, conversations.revision, conversations.status, conversations.\"case\" FROM conversations WHERE conversations.id = %(id_1)s::VARCHAR AND conversations.customer_id = %(customer_id_1)s::VARCHAR FOR UPDATE",
+          "count": 2
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.event_type = %(event_type_1)s::VARCHAR ORDER BY events.id DESC",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER AND action_previews.status = %(status_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT operations.id, operations.preview_id, operations.customer_id, operations.idempotency_key, operations.request_hash, operations.status, operations.receipt, operations.created_at FROM operations JOIN action_previews ON operations.preview_id = action_previews.id WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR AND action_previews.revision = %(revision_1)s::INTEGER",
+          "count": 1
+        },
+        {
+          "statement": "SELECT messages.id, messages.conversation_id, messages.client_message_id, messages.role, messages.text, messages.revision, messages.created_at FROM messages WHERE messages.conversation_id = %(conversation_id_1)s::VARCHAR ORDER BY messages.revision, messages.created_at, messages.id",
+          "count": 1
+        },
+        {
+          "statement": "SELECT action_previews.id, action_previews.conversation_id, action_previews.customer_id, action_previews.order_id, action_previews.payload, action_previews.parameter_hash, action_previews.revision, action_previews.order_version, action_previews.eligibility_policy, action_previews.flow_policy, action_previews.policy_hash, action_previews.status, action_previews.expires_at FROM action_previews WHERE action_previews.conversation_id = %(conversation_id_1)s::VARCHAR",
+          "count": 1
+        },
+        {
+          "statement": "SELECT events.id, events.conversation_id, events.event_type, events.payload, events.created_at FROM events WHERE events.conversation_id = %(conversation_id_1)s::VARCHAR AND events.id > %(id_1)s::BIGINT ORDER BY events.id LIMIT %(param_1)s::INTEGER",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "execution_plans": {
+    "order_lines_100": [
+      {
+        "Plan": {
+          "Node Type": "Seq Scan",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Relation Name": "order_lines",
+          "Alias": "order_lines",
+          "Startup Cost": 0.0,
+          "Total Cost": 2.17,
+          "Plan Rows": 1,
+          "Plan Width": 34,
+          "Actual Startup Time": 0.013,
+          "Actual Total Time": 0.018,
+          "Actual Rows": 100,
+          "Actual Loops": 1,
+          "Filter": "((order_id)::text = 'baseline_a_0f8d4906d1d2-order-100'::text)",
+          "Rows Removed by Filter": 18,
+          "Shared Hit Blocks": 2,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning": {
+          "Shared Hit Blocks": 0,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 0.01,
+        "Triggers": [],
+        "Execution Time": 0.022
+      }
+    ],
+    "previews_100": [
+      {
+        "Plan": {
+          "Node Type": "Seq Scan",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Relation Name": "action_previews",
+          "Alias": "action_previews",
+          "Startup Cost": 0.0,
+          "Total Cost": 5.56,
+          "Plan Rows": 1,
+          "Plan Width": 814,
+          "Actual Startup Time": 0.001,
+          "Actual Total Time": 0.007,
+          "Actual Rows": 100,
+          "Actual Loops": 1,
+          "Filter": "((conversation_id)::text = 'baseline_a_0f8d4906d1d2-previews-100'::text)",
+          "Rows Removed by Filter": 10,
+          "Shared Hit Blocks": 5,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning": {
+          "Shared Hit Blocks": 1,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 0.007,
+        "Triggers": [],
+        "Execution Time": 0.009
+      }
+    ],
+    "sse_first_100_of_1000": [
+      {
+        "Plan": {
+          "Node Type": "Limit",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 4.17,
+          "Total Cost": 4.18,
+          "Plan Rows": 1,
+          "Plan Width": 287,
+          "Actual Startup Time": 0.095,
+          "Actual Total Time": 0.1,
+          "Actual Rows": 100,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Sort",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 4.17,
+              "Total Cost": 4.18,
+              "Plan Rows": 1,
+              "Plan Width": 287,
+              "Actual Startup Time": 0.095,
+              "Actual Total Time": 0.097,
+              "Actual Rows": 100,
+              "Actual Loops": 1,
+              "Sort Key": [
+                "id"
+              ],
+              "Sort Method": "top-N heapsort",
+              "Sort Space Used": 38,
+              "Sort Space Type": "Memory",
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Index Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Scan Direction": "Forward",
+                  "Index Name": "ix_events_conversation_id",
+                  "Relation Name": "events",
+                  "Alias": "events",
+                  "Startup Cost": 0.14,
+                  "Total Cost": 4.16,
+                  "Plan Rows": 1,
+                  "Plan Width": 287,
+                  "Actual Startup Time": 0.004,
+                  "Actual Total Time": 0.061,
+                  "Actual Rows": 1000,
+                  "Actual Loops": 1,
+                  "Index Cond": "((conversation_id)::text = 'baseline_a_0f8d4906d1d2-events-1000'::text)",
+                  "Rows Removed by Index Recheck": 0,
+                  "Filter": "(id > 0)",
+                  "Rows Removed by Filter": 0,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
+            }
+          ]
+        },
+        "Planning": {
+          "Shared Hit Blocks": 6,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 0.02,
+        "Triggers": [],
+        "Execution Time": 0.104
+      }
+    ],
+    "runtime_state_among_1000": [
+      {
+        "Plan": {
+          "Node Type": "Sort",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 4.17,
+          "Total Cost": 4.18,
+          "Plan Rows": 1,
+          "Plan Width": 287,
+          "Actual Startup Time": 0.051,
+          "Actual Total Time": 0.051,
+          "Actual Rows": 0,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "id DESC"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 25,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Index Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Scan Direction": "Forward",
+              "Index Name": "ix_events_conversation_id",
+              "Relation Name": "events",
+              "Alias": "events",
+              "Startup Cost": 0.14,
+              "Total Cost": 4.16,
+              "Plan Rows": 1,
+              "Plan Width": 287,
+              "Actual Startup Time": 0.05,
+              "Actual Total Time": 0.05,
+              "Actual Rows": 0,
+              "Actual Loops": 1,
+              "Index Cond": "((conversation_id)::text = 'baseline_a_0f8d4906d1d2-events-1000'::text)",
+              "Rows Removed by Index Recheck": 0,
+              "Filter": "((event_type)::text = 'runtime_state'::text)",
+              "Rows Removed by Filter": 1000,
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        },
+        "Planning": {
+          "Shared Hit Blocks": 0,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 0.009,
+        "Triggers": [],
+        "Execution Time": 0.053
+      }
+    ]
+  },
+  "lock_probes": {
+    "lock_timeout_ms": 300,
+    "statement_timeout_ms": 2000,
+    "results": [
+      {
+        "name": "plain_select",
+        "outcome": "ok",
+        "sqlstate": null,
+        "elapsed_ms": 5.115,
+        "observed_waits": []
+      },
+      {
+        "name": "locking_select",
+        "outcome": "database_error",
+        "sqlstate": "55P03",
+        "elapsed_ms": 303.717,
+        "observed_waits": [
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "transactionid",
+            "blockers": 1
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "outcome": "database_error",
+        "sqlstate": "55P03",
+        "elapsed_ms": 303.553,
+        "observed_waits": [
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "transactionid",
+            "blockers": 1
+          }
+        ]
+      },
+      {
+        "name": "product_snapshot",
+        "outcome": "database_error",
+        "sqlstate": "55P03",
+        "elapsed_ms": 305.179,
+        "observed_waits": [
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "transactionid",
+            "blockers": 1
+          }
+        ]
+      }
+    ],
+    "snapshot_after_release": "ok"
+  },
+  "cleanup": {
+    "table_counts_before": {
+      "customers": 3,
+      "policies": 1,
+      "variants": 7,
+      "inventory": 7,
+      "orders": 7,
+      "order_lines": 7,
+      "conversations": 1,
+      "messages": 2,
+      "action_previews": 0,
+      "jobs": 0,
+      "events": 5,
+      "demo_sessions": 0
+    },
+    "table_counts_after": {
+      "customers": 3,
+      "policies": 1,
+      "variants": 7,
+      "inventory": 7,
+      "orders": 7,
+      "order_lines": 7,
+      "conversations": 1,
+      "messages": 2,
+      "action_previews": 0,
+      "jobs": 0,
+      "events": 5,
+      "demo_sessions": 0
+    },
+    "match": true
+  },
+  "offline_suite": {
+    "tests": "276",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "4",
+    "time": "28.448"
+  },
+  "web_assets_sha256": {
+    "src/aftercare/web/static/app.css": "89f87556c237072e784f01182957e61d91d4f61921bcf66b36fb71b9c3421f2e",
+    "src/aftercare/web/static/app.js": "3351921a60c533f7e0bd1b41f7d2748fa0fd61e5c2a65696e8cc4582d31aee1f",
+    "src/aftercare/web/templates/index.html": "5392bcbce2def3c593f9e576fc8ec210fd9768a43353da1a04ca8c07ad0e078b"
+  },
+  "evidence_sha256": {
+    "runtime/backend-A/baseline-first.json": "772e198ebc726f1ebf225ef111a05085bf750ead516638fd1c39d534f2558515",
+    "runtime/backend-A/run-first.log": "bd4d71c1c2319045d9e54ba98726e42b3f1345942b24b958e2f5c5a9e757e0c9",
+    "runtime/backend-A/offline-suite-first.xml": "84b4c031d75f6f3d559799e3ccc16dd110dc8c79eff8ceba74e81eb7fe2aa5ff",
+    "runtime/backend-A/offline-suite-first.log": "3ae53f1a1fa1a797854b103e157a6f2b378d2bb5ab62d8df5eb70ef8c7e71496"
+  }
+}

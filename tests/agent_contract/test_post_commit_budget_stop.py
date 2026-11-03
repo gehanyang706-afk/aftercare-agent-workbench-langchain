@@ -148,6 +148,7 @@ def test_workbench_queue_uses_same_finalization_and_keeps_stop_metadata(service,
     service.clock = utc_now
     settings = Settings(
         _env_file=None,
+        demo_login_enabled=True,
         database_url=service.sessions.kw["bind"].url.render_as_string(hide_password=False),
     )
     setup_checkpoints(settings)

@@ -1,0 +1,163 @@
+name: aftercare-backend
+
+x-runtime: &runtime
+  image: ${BACKEND_IMAGE:-aftercare-agent-workbench-langchain:backend}
+  pull_policy: never
+  init: true
+  user: "10001:10001"
+  read_only: true
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 96
+  cpus: 0.5
+  mem_limit: 256m
+  stop_grace_period: 5s
+  restart: "no"
+  logging:
+    driver: json-file
+    options:
+      max-size: "5m"
+      max-file: "2"
+
+x-database-env: &database-env
+  APP_ENV: test
+  ALLOW_REAL_MODEL_CALLS: "false"
+  DATABASE_URL: "postgresql+psycopg://aftercare:aftercare_local_only@/aftercare_test?host=/var/run/postgresql"
+
+x-delivery-env: &delivery-env
+  <<: *database-env
+  WAREHOUSE_DELIVERY_ENABLED: "true"
+  WAREHOUSE_SIMULATION_ENABLED: "false"
+  WAREHOUSE_CALLBACKS_ENABLED: "false"
+  WAREHOUSE_BASE_URL: "http://127.0.0.1:8152"
+  WAREHOUSE_TOKEN: "${BACKEND_WAREHOUSE_TOKEN:?Set a local warehouse token of at least 32 characters}"
+  WAREHOUSE_TIMEOUT_SECONDS: "2"
+  OUTBOX_LEASE_SECONDS: "15"
+
+services:
+  db:
+    image: pgvector/pgvector:pg17@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+    pull_policy: never
+    environment:
+      POSTGRES_DB: aftercare_test
+      POSTGRES_USER: aftercare
+      POSTGRES_PASSWORD: aftercare_local_only
+    ports:
+      - "127.0.0.1:${BACKEND_DB_PORT:-55436}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - pgsocket:/var/run/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U aftercare -d aftercare_test"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    mem_limit: 384m
+    cpus: 0.5
+    pids_limit: 96
+    stop_grace_period: 10s
+    restart: "no"
+    logging:
+      driver: json-file
+      options: {max-size: "5m", max-file: "2"}
+
+  migrate:
+    <<: *runtime
+    environment: *database-env
+    volumes:
+      - pgsocket:/var/run/postgresql:ro
+    depends_on:
+      db: {condition: service_healthy}
+    command: [python, -m, aftercare, db, migrate]
+
+  app:
+    <<: *runtime
+    mem_limit: 384m
+    environment:
+      <<: *delivery-env
+      DEMO_LOGIN_ENABLED: "${BACKEND_DEMO_LOGIN:-false}"
+      WAREHOUSE_CALLBACKS_ENABLED: "true"
+      WAREHOUSE_CALLBACK_SECRET: "${BACKEND_CALLBACK_SECRET:?Set a different local callback secret of at least 32 characters}"
+    volumes:
+      - pgsocket:/var/run/postgresql:ro
+    depends_on:
+      db: {condition: service_healthy}
+      migrate: {condition: service_completed_successfully}
+    ports:
+      - "127.0.0.1:${BACKEND_APP_PORT:-8138}:8000"
+    command: [python, -m, aftercare, serve, --offline, --container-network, --async-warehouse]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready',timeout=2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  warehouse:
+    <<: *runtime
+    mem_limit: 160m
+    network_mode: service:app
+    environment:
+      ALLOW_REAL_MODEL_CALLS: "false"
+      MOCK_WAREHOUSE_TOKEN: "${BACKEND_WAREHOUSE_TOKEN:?Set a local warehouse token}"
+    volumes:
+      - warehouse_state:/app/runtime/mock-warehouse
+    depends_on:
+      app: {condition: service_healthy}
+    command: [python, -m, aftercare, mock-warehouse, --port, "8152", --state-path, /app/runtime/mock-warehouse/state.sqlite3]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8152/health/ready',timeout=2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  outbox:
+    <<: *runtime
+    network_mode: service:app
+    environment: *delivery-env
+    volumes:
+      - pgsocket:/var/run/postgresql:ro
+    depends_on:
+      warehouse: {condition: service_healthy}
+    command: [python, -m, aftercare, outbox-worker, --log-json]
+
+  query:
+    <<: *runtime
+    network_mode: service:app
+    environment: *delivery-env
+    volumes:
+      - pgsocket:/var/run/postgresql:ro
+    depends_on:
+      warehouse: {condition: service_healthy}
+    command: [python, -m, aftercare, reconciliation-worker, --log-json]
+
+  callbacks:
+    <<: *runtime
+    mem_limit: 160m
+    network_mode: service:app
+    environment:
+      ALLOW_REAL_MODEL_CALLS: "false"
+      MOCK_WAREHOUSE_CALLBACK_BASE_URL: "http://127.0.0.1:8000"
+      MOCK_WAREHOUSE_CALLBACK_SECRET: "${BACKEND_CALLBACK_SECRET:?Set a different callback secret}"
+    volumes:
+      - warehouse_state:/app/runtime/mock-warehouse
+    depends_on:
+      warehouse: {condition: service_healthy}
+    command: [python, -m, aftercare, mock-warehouse-callbacks, --state-path, /app/runtime/mock-warehouse/state.sqlite3]
+
+  agent:
+    <<: *runtime
+    profiles: [agent]
+    network_mode: service:app
+    environment: *database-env
+    volumes:
+      - pgsocket:/var/run/postgresql:ro
+    depends_on:
+      app: {condition: service_healthy}
+    command: [python, -m, aftercare, worker, --provider, scripted]
+
+volumes:
+  pgdata:
+  pgsocket:
+  warehouse_state:

@@ -19,6 +19,7 @@ from aftercare.repositories.models import Application, Inventory, Operation, Ord
 def config(service):
     return Settings(
         _env_file=None,
+        demo_login_enabled=True,
         database_url=service.sessions.kw["bind"].url.render_as_string(hide_password=False),
     )
 

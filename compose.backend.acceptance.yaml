@@ -1,0 +1,7 @@
+# Local acceptance only: customer demo sessions for the host HTTP probe.
+# The provider binds loopback inside the shared namespace and is never published.
+# Host acceptance enters the warehouse container for provider-only HTTP checks.
+services:
+  app:
+    environment:
+      DEMO_LOGIN_ENABLED: "true"

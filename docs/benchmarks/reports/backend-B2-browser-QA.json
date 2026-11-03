@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-28",
+  "result": {
+    "status": "passed",
+    "base_url": "http://127.0.0.1:8132",
+    "application_id": "app_47739498e3974eab81b84a21bb2dbeac",
+    "actions": [
+      {
+        "label": "审核通过",
+        "status": "AWAITING_RETURN",
+        "version": 2,
+        "allowed_actions": []
+      },
+      {
+        "label": "保存寄回信息",
+        "status": "RETURN_IN_TRANSIT",
+        "version": 3,
+        "allowed_actions": []
+      },
+      {
+        "label": "确认收货",
+        "status": "RETURN_RECEIVED",
+        "version": 4,
+        "allowed_actions": [
+          "request_shipment"
+        ]
+      },
+      {
+        "label": "提交出库请求",
+        "status": "REPLACEMENT_PENDING",
+        "version": 5,
+        "allowed_actions": [
+          "simulate_shipment"
+        ]
+      },
+      {
+        "label": "本地模拟出库",
+        "status": "REPLACEMENT_SHIPPED",
+        "version": 6,
+        "allowed_actions": []
+      },
+      {
+        "label": "确认收到换货",
+        "status": "COMPLETED",
+        "version": 7,
+        "allowed_actions": []
+      }
+    ],
+    "checks": {
+      "initial_receipt_sha256": "5255cce0f2b22cf2027faf27a4afa2151d80b57a1a522ccf2b68c93bca163af1",
+      "original_receipt_unchanged": true,
+      "final_status": "COMPLETED",
+      "final_version": 7,
+      "history_versions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "shipment_record_count": 1,
+      "simulation_label_visible": true,
+      "simulator_triggered_by_staff": true,
+      "final_actions_empty": true,
+      "desktop": {
+        "viewport": 1440,
+        "content": 1440,
+        "body": 1440,
+        "no_horizontal_overflow": true,
+        "screenshot": "docs/screenshots/backend-B2-desktop.png"
+      },
+      "narrow": {
+        "viewport": 390,
+        "content": 390,
+        "body": 390,
+        "no_horizontal_overflow": true,
+        "screenshot": "docs/screenshots/backend-B2-narrow.png"
+      }
+    },
+    "cleanup": {
+      "support_ui_logout": true,
+      "customer_ui_logout": true,
+      "warehouse_ui_logout": true,
+      "isolated_profile_removed": true,
+      "user_profile_touched": false
+    },
+    "page_errors": [],
+    "duration_seconds": 5.272
+  },
+  "chrome_version": "156.0.8078.48",
+  "playwright_version": "1.62.1",
+  "evidence_sha256": {
+    "runtime/backend-B2-ui-20261028/browser-driver.cjs": "15658831b198d1321f1e96e19d76e1fa01dca12ca04d8ccda40a24683f01e383",
+    "runtime/backend-B2-ui-20261028/browser-run-first.json": "828a8bcfab98936098faf49af7d52bea6d096e00b64731038749f788b38b506b",
+    "docs/screenshots/backend-B2-desktop.png": "34a58ba16618ead75c5349985a0dd78fb3d407447eab0ea3b467f0d7dee55c81",
+    "docs/screenshots/backend-B2-narrow.png": "b7bbb7cacd7020b0e1466de8ab6b503c2e6f79076e599ebff05ee0bab9dd077f"
+  },
+  "writes_via_ui_only": true,
+  "visual_inspection": "desktop and narrow PNGs viewed; no visible clipping or overlap",
+  "limitations": [
+    "final customer state screenshots only",
+    "no GUI network-fault injection",
+    "headless local Chrome only",
+    "no production or C reliability claims"
+  ]
+}

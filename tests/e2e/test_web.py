@@ -14,6 +14,7 @@ def web(service, dev=False):
     settings = Settings(
         _env_file=None,
         app_env="test",
+        demo_login_enabled=True,
         dev_faults=dev,
         database_url=service.sessions.kw["bind"].url.render_as_string(hide_password=False),
     )

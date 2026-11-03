@@ -169,7 +169,259 @@ class Application(Base):
     quantity: Mapped[int] = mapped_column(Integer)
     target_variant: Mapped[str | None] = mapped_column(ForeignKey("variants.id"))
     status: Mapped[str] = mapped_column(String)
-    __table_args__ = (CheckConstraint("quantity > 0"),)
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"))
+    __table_args__ = (
+        CheckConstraint("quantity > 0"),
+        CheckConstraint("version >= 1", name="ck_aftercare_requests_version"),
+        CheckConstraint(
+            "action != 'exchange' OR status IN ("
+            "'EXCHANGE_REQUESTED', 'AWAITING_RETURN', 'RETURN_IN_TRANSIT', "
+            "'RETURN_RECEIVED', 'REPLACEMENT_PENDING', 'REPLACEMENT_SHIPPED', "
+            "'COMPLETED', 'REJECTED', 'WITHDRAWN')",
+            name="ck_aftercare_requests_exchange_state",
+        ),
+    )
+
+
+class ExchangeFulfillment(Base):
+    __tablename__ = "exchange_fulfillments"
+    application_id: Mapped[str] = mapped_column(
+        ForeignKey("aftercare_requests.id"), primary_key=True
+    )
+    origin: Mapped[str] = mapped_column(String, default="native", server_default="native")
+    return_carrier: Mapped[str | None] = mapped_column(String)
+    return_tracking: Mapped[str | None] = mapped_column(String)
+    received_note: Mapped[str | None] = mapped_column(Text)
+    received_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    effect_key: Mapped[str | None] = mapped_column(String, unique=True)
+    shipment_status: Mapped[str | None] = mapped_column(String)
+    external_shipment_id: Mapped[str | None] = mapped_column(String, unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        CheckConstraint("origin IN ('legacy', 'native')", name="ck_exchange_fulfillments_origin"),
+        CheckConstraint(
+            "shipment_status IN ('PENDING', 'UNKNOWN', 'SUCCEEDED', 'FAILED', 'MANUAL_REVIEW')",
+            name="ck_exchange_fulfillments_shipment_status",
+        ),
+    )
+
+
+class FulfillmentCommand(Base):
+    __tablename__ = "fulfillment_commands"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    application_id: Mapped[str] = mapped_column(ForeignKey("aftercare_requests.id"), index=True)
+    actor_id: Mapped[str] = mapped_column(String)
+    actor_role: Mapped[str] = mapped_column(String)
+    actor_source: Mapped[str] = mapped_column(String)
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    command: Mapped[str] = mapped_column(String)
+    receipt: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        UniqueConstraint("application_id", "actor_id", "actor_role", "idempotency_key"),
+    )
+
+
+class FulfillmentAudit(Base):
+    __tablename__ = "fulfillment_audits"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    application_id: Mapped[str] = mapped_column(ForeignKey("aftercare_requests.id"), index=True)
+    command_id: Mapped[str | None] = mapped_column(
+        ForeignKey("fulfillment_commands.id"), unique=True
+    )
+    actor_id: Mapped[str] = mapped_column(String)
+    actor_role: Mapped[str] = mapped_column(String)
+    actor_source: Mapped[str] = mapped_column(String)
+    command: Mapped[str] = mapped_column(String)
+    from_state: Mapped[str | None] = mapped_column(String)
+    to_state: Mapped[str] = mapped_column(String)
+    from_version: Mapped[int | None] = mapped_column(Integer)
+    to_version: Mapped[int] = mapped_column(Integer)
+    details: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (UniqueConstraint("application_id", "to_version"),)
+
+
+class ShipmentRequest(Base):
+    __tablename__ = "shipment_requests"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    application_id: Mapped[str] = mapped_column(ForeignKey("aftercare_requests.id"), unique=True)
+    effect_key: Mapped[str] = mapped_column(String, unique=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+    request_hash: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    external_shipment_id: Mapped[str | None] = mapped_column(String, unique=True)
+    provider_external_id: Mapped[str | None] = mapped_column(String, unique=True)
+    last_sequence: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    triggered_by: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('PENDING', 'UNKNOWN', 'SUCCEEDED', 'FAILED', 'MANUAL_REVIEW')",
+            name="ck_shipment_requests_status",
+        ),
+        CheckConstraint("length(request_hash) = 64", name="ck_shipment_requests_hash"),
+        CheckConstraint("last_sequence >= 0", name="ck_shipment_requests_sequence"),
+    )
+
+
+class WarehouseOutbox(Base):
+    __tablename__ = "warehouse_outbox"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    request_id: Mapped[str] = mapped_column(ForeignKey("shipment_requests.id"), unique=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    lease_owner: Mapped[str | None] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    lease_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    attempts: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    cycle_attempts: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    redrive_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    last_error_code: Mapped[str | None] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('PENDING', 'CLAIMED', 'DELIVERED', 'BLOCKED', 'DEAD')",
+            name="ck_warehouse_outbox_status",
+        ),
+        CheckConstraint("generation >= 0 AND attempts >= 0", name="ck_warehouse_outbox_counters"),
+        CheckConstraint(
+            "cycle_attempts >= 0 AND redrive_count >= 0", name="ck_warehouse_outbox_cycles"
+        ),
+        CheckConstraint(
+            "(status = 'CLAIMED' AND lease_owner IS NOT NULL AND lease_expires_at IS NOT NULL) "
+            "OR (status != 'CLAIMED' AND lease_owner IS NULL AND lease_expires_at IS NULL)",
+            name="ck_warehouse_outbox_lease",
+        ),
+        Index("ix_warehouse_outbox_claim", "status", "next_attempt_at", "id"),
+    )
+
+
+class OutboxAttempt(Base):
+    __tablename__ = "outbox_attempts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    outbox_id: Mapped[str] = mapped_column(ForeignKey("warehouse_outbox.id"), index=True)
+    generation: Mapped[int] = mapped_column(Integer)
+    owner: Mapped[str] = mapped_column(String)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    send_state: Mapped[str] = mapped_column(
+        String, default="LEGACY_UNKNOWN", server_default="LEGACY_UNKNOWN"
+    )
+    send_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    outcome: Mapped[str | None] = mapped_column(String)
+    error_code: Mapped[str | None] = mapped_column(String)
+    __table_args__ = (
+        UniqueConstraint("outbox_id", "generation"),
+        CheckConstraint("generation >= 1", name="ck_outbox_attempts_generation"),
+        CheckConstraint(
+            "send_state IN ('NOT_STARTED', 'STARTED', 'LEGACY_UNKNOWN')",
+            name="ck_outbox_attempts_send_state",
+        ),
+        CheckConstraint(
+            "(send_state = 'STARTED' AND send_started_at IS NOT NULL) OR "
+            "(send_state != 'STARTED' AND send_started_at IS NULL)",
+            name="ck_outbox_attempts_send_started",
+        ),
+        CheckConstraint(
+            "outcome IN ('SUCCEEDED', 'RETRYABLE', 'FAILED', 'UNKNOWN')",
+            name="ck_outbox_attempts_outcome",
+        ),
+    )
+
+
+class WarehouseInbox(Base):
+    __tablename__ = "warehouse_inbox"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    source: Mapped[str] = mapped_column(String)
+    event_id: Mapped[str] = mapped_column(String)
+    payload: Mapped[dict] = mapped_column(JSON)
+    body_hash: Mapped[str] = mapped_column(String(64))
+    sequence: Mapped[int] = mapped_column(Integer)
+    effect_key: Mapped[str] = mapped_column(String, index=True)
+    application_id: Mapped[str] = mapped_column(String)
+    external_shipment_id: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String, default="RECEIVED", server_default="RECEIVED")
+    error_code: Mapped[str | None] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        UniqueConstraint("source", "event_id"),
+        CheckConstraint("sequence >= 1", name="ck_warehouse_inbox_sequence"),
+        CheckConstraint(
+            "status IN ('RECEIVED','PENDING','PROCESSED','STALE','CONFLICT')",
+            name="ck_warehouse_inbox_status",
+        ),
+    )
+
+
+class InboxConflict(Base):
+    __tablename__ = "inbox_conflicts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    inbox_id: Mapped[str] = mapped_column(ForeignKey("warehouse_inbox.id"), index=True)
+    original_hash: Mapped[str] = mapped_column(String(64))
+    new_hash: Mapped[str] = mapped_column(String(64))
+    payload: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (UniqueConstraint("inbox_id", "new_hash"),)
+
+
+class ReconciliationTask(Base):
+    __tablename__ = "reconciliation_tasks"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    request_id: Mapped[str] = mapped_column(ForeignKey("shipment_requests.id"), unique=True)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    owner: Mapped[str | None] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    lease_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    attempts: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    cycle_attempts: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    cycle: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"))
+    next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    deadline_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    last_error_code: Mapped[str | None] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('PENDING','CLAIMED','DONE','EXHAUSTED')",
+            name="ck_reconciliation_tasks_status",
+        ),
+        CheckConstraint(
+            "generation >= 0 AND attempts >= 0 AND cycle_attempts >= 0 AND cycle >= 1",
+            name="ck_reconciliation_tasks_counters",
+        ),
+        CheckConstraint(
+            "(status='CLAIMED' AND owner IS NOT NULL AND lease_expires_at IS NOT NULL) "
+            "OR (status!='CLAIMED' AND owner IS NULL AND lease_expires_at IS NULL)",
+            name="ck_reconciliation_tasks_lease",
+        ),
+        Index("ix_reconciliation_tasks_claim", "status", "next_attempt_at", "id"),
+    )
+
+
+class RecoveryCommand(Base):
+    __tablename__ = "recovery_commands"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    actor_id: Mapped[str] = mapped_column(String)
+    actor_role: Mapped[str] = mapped_column(String)
+    actor_source: Mapped[str] = mapped_column(String)
+    idempotency_key: Mapped[str] = mapped_column(String)
+    action: Mapped[str] = mapped_column(String)
+    request_id: Mapped[str] = mapped_column(ForeignKey("shipment_requests.id"), index=True)
+    outbox_id: Mapped[str] = mapped_column(ForeignKey("warehouse_outbox.id"))
+    expected_generation: Mapped[int] = mapped_column(Integer)
+    request_hash: Mapped[str] = mapped_column(String(64))
+    receipt: Mapped[dict] = mapped_column(JSON)
+    reason: Mapped[str] = mapped_column(String(500))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (UniqueConstraint("actor_id", "idempotency_key"),)
 
 
 class Reservation(Base):
@@ -261,6 +513,32 @@ class DemoSession(Base):
     customer_id: Mapped[str] = mapped_column(ForeignKey("customers.id"))
     csrf_token: Mapped[str] = mapped_column(String)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class StaffAccount(Base):
+    __tablename__ = "staff_accounts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    username: Mapped[str] = mapped_column(String(100), unique=True)
+    password_hash: Mapped[str] = mapped_column(String)
+    role: Mapped[str] = mapped_column(String)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"))
+    auth_version: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (
+        CheckConstraint("role IN ('support', 'warehouse')", name="ck_staff_accounts_role"),
+        CheckConstraint("auth_version >= 1", name="ck_staff_accounts_auth_version"),
+    )
+
+
+class StaffSession(Base):
+    __tablename__ = "staff_sessions"
+    token_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    staff_id: Mapped[str] = mapped_column(ForeignKey("staff_accounts.id"), index=True)
+    csrf_token: Mapped[str] = mapped_column(String(64))
+    auth_version: Mapped[int] = mapped_column(Integer)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Job(Base):

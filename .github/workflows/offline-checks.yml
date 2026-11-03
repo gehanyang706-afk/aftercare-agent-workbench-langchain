@@ -1,0 +1,111 @@
+name: Offline backend checks
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: offline-backend-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      APP_ENV: test
+      ALLOW_REAL_MODEL_CALLS: "false"
+      DATABASE_URL: postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55434/aftercare_test
+      AFTERCARE_TEST_DATABASE_URL: postgresql+psycopg://aftercare:aftercare_local_only@127.0.0.1:55434/aftercare_test
+      HF_HUB_OFFLINE: "1"
+      HF_DATASETS_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      PYTHONPATH: src:.
+      EVIDENCE_DIR: runtime/backend-D4/ci-first
+    services:
+      postgres:
+        # OCI index contains linux/amd64 and linux/arm64; only arm64 executed locally.
+        image: pgvector/pgvector:pg17@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+        env:
+          POSTGRES_DB: aftercare_test
+          POSTGRES_USER: aftercare
+          POSTGRES_PASSWORD: aftercare_local_only
+        ports:
+          - 55434:5432
+        options: >-
+          --health-cmd "pg_isready -U aftercare -d aftercare_test"
+          --health-interval 5s --health-timeout 3s --health-retries 12
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        id: checkout
+        with:
+          persist-credentials: false
+      - name: Create a fresh evidence directory
+        run: mkdir -m 700 -p "$EVIDENCE_DIR"
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        with:
+          python-version: "3.13.14"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: "24.22.1"
+      - name: Install hash-locked dependencies
+        id: install
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --require-hashes -r requirements.lock 2>&1 | tee "$EVIDENCE_DIR/install-first.log"
+          python -m pip install --no-deps --no-build-isolation -e . 2>&1 | tee "$EVIDENCE_DIR/project-install-first.log"
+      - name: Check source and installed dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m ruff check . 2>&1 | tee "$EVIDENCE_DIR/ruff-first.log"
+          python -m ruff format --check . 2>&1 | tee "$EVIDENCE_DIR/format-first.log"
+          python -m pip check 2>&1 | tee "$EVIDENCE_DIR/pip-check-first.log"
+          git diff --check 2>&1 | tee "$EVIDENCE_DIR/diff-first.log"
+      - name: Migrate only the isolated test database and require readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/backend_d4_ci_check.py target --output "$EVIDENCE_DIR/target-first.json"
+          python -m aftercare db migrate 2>&1 | tee "$EVIDENCE_DIR/migrate-first.log"
+          python scripts/backend_d4_ci_check.py preflight --output "$EVIDENCE_DIR/preflight-first.json"
+      - name: Run the complete offline regression once
+        id: regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -m 'not live_model and not model_weights' --junitxml="$EVIDENCE_DIR/full-first.xml" 2>&1 | tee "$EVIDENCE_DIR/full-first.log"
+      - name: Reject missing database coverage or unexpected skips
+        if: ${{ always() && steps.regression.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/backend_d4_ci_check.py audit --junit "$EVIDENCE_DIR/full-first.xml" --output "$EVIDENCE_DIR/junit-audit-first.json"
+      - name: Run the independent browser refresh queue tests
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version | tee "$EVIDENCE_DIR/node-version.log"
+          node --test tests/web/test_refresh_queue.mjs 2>&1 | tee "$EVIDENCE_DIR/refresh-first.log"
+      - name: Build the canonical image and verify its locked runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --pull --tag aftercare-backend:ci . 2>&1 | tee "$EVIDENCE_DIR/docker-build-first.log"
+          docker run --rm --network none --entrypoint python aftercare-backend:ci scripts/backend_runtime_lock.py --require-project 2>&1 | tee "$EVIDENCE_DIR/image-lock-first.log"
+      - name: Retain first logs, including failures
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: offline-backend-${{ github.run_id }}-${{ github.run_attempt }}
+          path: runtime/backend-D4/ci-first/
+          if-no-files-found: error
+          retention-days: 14
